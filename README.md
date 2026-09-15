@@ -9,9 +9,9 @@
 # MCP Server for Social Media: Manage Every DM and Post From Your AI Assistant
 
 [![npm version](https://img.shields.io/npm/v/@crmsolid/mcp-server.svg)](https://www.npmjs.com/package/@crmsolid/mcp-server)
-[![CI](https://github.com/CRM-Solid/pinlyx-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/CRM-Solid/pinlyx-mcp/actions/workflows/ci.yml)
+[![CI](https://github.com/Pinlyx/pinlyx-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Pinlyx/pinlyx-mcp/actions/workflows/ci.yml)
 [![node](https://img.shields.io/node/v/@crmsolid/mcp-server.svg)](https://nodejs.org)
-[![license](https://img.shields.io/npm/l/@crmsolid/mcp-server.svg)](https://github.com/CRM-Solid/pinlyx-mcp/blob/main/LICENSE)
+[![license](https://img.shields.io/npm/l/@crmsolid/mcp-server.svg)](https://github.com/Pinlyx/pinlyx-mcp/blob/main/LICENSE)
 [![AllMCPs](https://allmcps.com/api/badge/crm-solid-mcp)](https://allmcps.com/mcp/crm-solid-mcp)
 
 `@crmsolid/mcp-server` is an MCP server for social media. It gives Claude Desktop, Claude
@@ -289,17 +289,17 @@ curl -s https://api.crmsolid.com/mcp \
 
 Hosted documentation: [docs.pinlyx.com/integrations/mcp/](https://docs.pinlyx.com/integrations/mcp/).
 Vendor neutral tutorials, including ones that do not involve Pinlyx at all:
-[CRM-Solid/mcp-social-media-guide](https://github.com/CRM-Solid/mcp-social-media-guide).
+[Pinlyx/mcp-social-media-guide](https://github.com/Pinlyx/mcp-social-media-guide).
 
 ## Related packages
 
-- [`@crmsolid/node`](https://github.com/CRM-Solid/crmsolid-node): the REST client, for code
+- [`@crmsolid/node`](https://github.com/Pinlyx/crmsolid-node): the REST client, for code
   that is not an AI assistant.
 - [Pinlyx Clipper](https://chromewebstore.google.com/detail/crm-solid-clipper-save-le/mbdeafjdkhilgbdaoenggfamombmgpfm):
   the browser extension, for the other direction. It puts a person into the CRM from the
   page you are reading, which is where most contacts come from before any of this runs.
-  Source: [CRM-Solid/pinlyx-clipper](https://github.com/CRM-Solid/pinlyx-clipper).
-- [`n8n-nodes-crmsolid`](https://github.com/CRM-Solid/n8n-nodes-pinlyx): the n8n
+  Source: [Pinlyx/pinlyx-clipper](https://github.com/Pinlyx/pinlyx-clipper).
+- [`n8n-nodes-crmsolid`](https://github.com/Pinlyx/n8n-nodes-pinlyx): the n8n
   community node, for the workflows an assistant is not in. Same API, same keys, so a
   contact your assistant files is the one an n8n branch picks up.
 - The public v1 REST API behind all of this:
@@ -307,7 +307,7 @@ Vendor neutral tutorials, including ones that do not involve Pinlyx at all:
 
 ## Contributing and support
 
-Issues and pull requests: [CRM-Solid/pinlyx-mcp](https://github.com/CRM-Solid/pinlyx-mcp).
+Issues and pull requests: [Pinlyx/pinlyx-mcp](https://github.com/Pinlyx/pinlyx-mcp).
 When you report a connection problem, include your client and version, the output of
 `npx -y @crmsolid/mcp-server --version`, your config with the key redacted, and the relevant
 lines from the client's MCP log.

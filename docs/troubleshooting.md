@@ -209,7 +209,7 @@ Do not disable certificate verification to get past this. If the certificate can
 
 ## Opening an issue
 
-If none of the above fixes it, open an issue at [https://github.com/CRM-Solid/pinlyx-mcp/issues](https://github.com/CRM-Solid/pinlyx-mcp/issues) and include:
+If none of the above fixes it, open an issue at [https://github.com/Pinlyx/pinlyx-mcp/issues](https://github.com/Pinlyx/pinlyx-mcp/issues) and include:
 
 1. Output of `node --version` and `npx -y @crmsolid/mcp-server --version`.
 2. Operating system and version, and the client plus its version.

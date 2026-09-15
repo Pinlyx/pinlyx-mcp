@@ -20,10 +20,10 @@
   "homepage": "https://docs.pinlyx.com/integrations/mcp/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CRM-Solid/pinlyx-mcp.git"
+    "url": "git+https://github.com/Pinlyx/pinlyx-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/CRM-Solid/pinlyx-mcp/issues"
+    "url": "https://github.com/Pinlyx/pinlyx-mcp/issues"
   },
   "license": "MIT",
   "author": "Pinlyx",
