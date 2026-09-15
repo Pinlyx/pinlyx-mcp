@@ -111,7 +111,7 @@ Revoke it in the panel and it stops working immediately, everywhere it was confi
 
 ### Can I self-host it?
 
-You can run the proxy yourself: it is MIT licensed and the source is at [https://github.com/CRM-Solid/crmsolid-mcp](https://github.com/CRM-Solid/crmsolid-mcp), so clone it, audit it, build it and point your client at your own build. It still calls `api.crmsolid.com`, because that is where the CRM and the platform connections live. Set `CRMSOLID_BASE_URL` only if you have been given a different endpoint to use.
+You can run the proxy yourself: it is MIT licensed and the source is at [https://github.com/CRM-Solid/pinlyx-mcp](https://github.com/CRM-Solid/pinlyx-mcp), so clone it, audit it, build it and point your client at your own build. It still calls `api.crmsolid.com`, because that is where the CRM and the platform connections live. Set `CRMSOLID_BASE_URL` only if you have been given a different endpoint to use.
 
 ## Limits and costs
 
@@ -143,7 +143,7 @@ Usually because no social account is connected to that workspace, or the filters
 
 ### Where do I report a bug?
 
-At [https://github.com/CRM-Solid/crmsolid-mcp/issues](https://github.com/CRM-Solid/crmsolid-mcp/issues). Include your Node version, the package version from `npx -y @crmsolid/mcp-server --version`, your client and OS, and your config with the key redacted. The checklist at the end of [./troubleshooting.md](./troubleshooting.md) lists everything that saves a round trip.
+At [https://github.com/CRM-Solid/pinlyx-mcp/issues](https://github.com/CRM-Solid/pinlyx-mcp/issues). Include your Node version, the package version from `npx -y @crmsolid/mcp-server --version`, your client and OS, and your config with the key redacted. The checklist at the end of [./troubleshooting.md](./troubleshooting.md) lists everything that saves a round trip.
 
 ## Where to go next
 
