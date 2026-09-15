@@ -1,7 +1,8 @@
 {
   "name": "@crmsolid/mcp-server",
-  "version": "0.1.0",
-  "description": "Manage every social media DM and post from your AI assistant, over MCP. Stdio Model Context Protocol server for CRM Solid: Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp inboxes plus scheduled posts, for Claude Desktop, Claude Code, Cursor and ChatGPT.",
+  "version": "0.1.3",
+  "mcpName": "io.github.azorkai/crmsolid-mcp",
+  "description": "Manage every social media DM and post from your AI assistant, over MCP. Stdio Model Context Protocol server for Pinlyx: Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp inboxes plus scheduled posts, for Claude Desktop, Claude Code, Cursor and ChatGPT.",
   "keywords": [
     "mcp",
     "mcp-server",
@@ -11,20 +12,21 @@
     "whatsapp",
     "dm",
     "crm",
+    "pinlyx",
     "ai-agent",
     "claude",
     "scheduler"
   ],
-  "homepage": "https://docs.crmsolid.com/integrations/mcp/",
+  "homepage": "https://docs.pinlyx.com/integrations/mcp/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CRM-Solid/crmsolid-mcp.git"
+    "url": "git+https://github.com/CRM-Solid/pinlyx-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/CRM-Solid/crmsolid-mcp/issues"
+    "url": "https://github.com/CRM-Solid/pinlyx-mcp/issues"
   },
   "license": "MIT",
-  "author": "CRM Solid",
+  "author": "Pinlyx",
   "type": "module",
   "sideEffects": false,
   "engines": {

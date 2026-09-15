@@ -178,7 +178,7 @@ describe('network errors', () => {
       60_000,
     );
     expect(error).toBeInstanceOf(UpstreamConnectionError);
-    expect(error.message).toContain('Could not reach CRM Solid at https://api.crmsolid.com/mcp');
+    expect(error.message).toContain('Could not reach Pinlyx at https://api.crmsolid.com/mcp');
     expect(error.message).toContain('fetch failed');
     expect(error.message).toContain('proxy or firewall');
   });
@@ -187,7 +187,7 @@ describe('network errors', () => {
     session = await connectBridge({ fallback: { throws: new TypeError('fetch failed') } }, { maxRetries: 0 });
 
     const failure = await session.client.listTools().catch((error: unknown) => error as Error);
-    expect((failure as Error).message).toContain('Could not reach CRM Solid');
+    expect((failure as Error).message).toContain('Could not reach Pinlyx');
   });
 
   it('reports a body that is not JSON as an interception rather than a parse error', async () => {

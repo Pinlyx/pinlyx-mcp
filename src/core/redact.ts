@@ -7,7 +7,7 @@
  * once into that file is a key that has to be rotated, and the person pasting it
  * will not notice. Two layers, because either one alone has a hole:
  *
- *   1. A shape rule that catches anything that looks like a CRM Solid key, even
+ *   1. A shape rule that catches anything that looks like a Pinlyx key, even
  *      one this process was never given (a key pasted into a tool argument, a
  *      key echoed back inside an upstream error body).
  *   2. An exact-value rule for the key this process IS holding, which covers a

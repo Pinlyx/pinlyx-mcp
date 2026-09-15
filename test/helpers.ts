@@ -196,7 +196,7 @@ export const INITIALIZE_RESULT = {
     logging: {},
     experimental: {},
   },
-  serverInfo: { name: 'crmsolid', title: 'CRM Solid', version: '1.0.0' },
+  serverInfo: { name: 'crmsolid', title: 'Pinlyx', version: '1.0.0' },
 };
 
 /** Scripts an `initialize` reply carrying a session id, as the backend does. */

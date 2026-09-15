@@ -242,7 +242,7 @@ describe('retry through the bridge', () => {
     );
 
     const failure = await connected.client.listTools().catch((error: unknown) => error as Error);
-    expect((failure as Error).message).toContain('Could not reach CRM Solid');
+    expect((failure as Error).message).toContain('Could not reach Pinlyx');
     expect(connected.upstream.received('tools/list')).toHaveLength(3);
 
     await connected.close();

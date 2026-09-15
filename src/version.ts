@@ -8,10 +8,10 @@
  * in a user's environment for no benefit. CI checks it against package.json
  * before publishing, so the two cannot drift.
  */
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.3';
 
 /** Machine name of this server, as it appears in the local `initialize` result. */
 export const SERVER_NAME = 'crmsolid';
 
 /** Human label a client UI shows next to the connection. */
-export const SERVER_TITLE = 'CRM Solid';
+export const SERVER_TITLE = 'Pinlyx';

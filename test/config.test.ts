@@ -54,7 +54,7 @@ describe('configuration resolution', () => {
     expect(() => resolve([])).toThrow(/app\.crmsolid\.com\/settings\/developers/);
   });
 
-  it('rejects something that is not a CRM Solid key', () => {
+  it('rejects something that is not a Pinlyx key', () => {
     expect(() => resolve(['--api-key', 'sk-not-ours'])).toThrow(/must start with 'csk_'/);
   });
 

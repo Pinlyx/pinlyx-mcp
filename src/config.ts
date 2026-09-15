@@ -102,7 +102,7 @@ export function resolveConfig(parsed: ParsedArgs, env: NodeJS.ProcessEnv): Bridg
   }
   if (!apiKey.startsWith('csk_')) {
     throw new ConfigError(
-      `The API key does not look like a CRM Solid key: it must start with 'csk_'. Mint one at ${KEY_SETTINGS_URL}.`,
+      `The API key does not look like a Pinlyx key: it must start with 'csk_'. Mint one at ${KEY_SETTINGS_URL}.`,
     );
   }
 
@@ -190,7 +190,7 @@ export function helpText(): string {
   Manage every social media DM and post from your AI assistant, over MCP.
 
   A stdio Model Context Protocol server that bridges an MCP client (Claude Desktop,
-  Claude Code, Cursor, ChatGPT and anything else that speaks MCP) to your CRM Solid
+  Claude Code, Cursor, ChatGPT and anything else that speaks MCP) to your Pinlyx
   workspace: Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Threads, Pinterest,
   Reddit, Bluesky, Telegram and WhatsApp inboxes, plus scheduled posts.
 
@@ -198,13 +198,13 @@ USAGE
   crmsolid-mcp [options]
 
 OPTIONS
-  --api-key <key>        CRM Solid API key (csk_live_...). Required.
+  --api-key <key>        Pinlyx API key (csk_live_...). Required.
                          Env: CRMSOLID_API_KEY
   --base-url <url>       API host. Default: ${DEFAULT_BASE_URL}
                          Env: CRMSOLID_BASE_URL
   --tools <a,b,c>        Expose only these tool groups. Default: all.
                          Env: CRMSOLID_TOOLS
-  --read-only            Expose only tools CRM Solid marks as read-only, and
+  --read-only            Expose only tools Pinlyx marks as read-only, and
                          refuse a write even if one is called anyway.
                          Env: CRMSOLID_READ_ONLY=1
   --timeout <ms>         Per-request timeout. Default: ${DEFAULT_TIMEOUT_MS}
@@ -238,6 +238,6 @@ CONFIGURATION
   }
 
   Create an API key at ${KEY_SETTINGS_URL}
-  Documentation: https://docs.crmsolid.com/integrations/mcp/
+  Documentation: https://docs.pinlyx.com/integrations/mcp/
 `;
 }

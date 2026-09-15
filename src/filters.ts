@@ -92,7 +92,7 @@ export function isReadOnlyTool(tool: Pick<ToolInfo, 'annotations'>): boolean {
 /** Why a tool is hidden, or `null` when it is allowed. */
 export function toolRejection(tool: ToolInfo, options: FilterOptions): string | null {
   if (options.readOnly && !isReadOnlyTool(tool)) {
-    return 'This session was started with --read-only, which allows only tools that CRM Solid marks as read-only.';
+    return 'This session was started with --read-only, which allows only tools that Pinlyx marks as read-only.';
   }
 
   if (options.groups) {
@@ -130,7 +130,7 @@ export function assertToolAllowed(name: string, tool: ToolInfo | undefined, opti
   if (!tool) {
     throw new ToolNotAllowedError({
       toolName: name,
-      reason: 'CRM Solid does not publish a tool by that name to this API key.',
+      reason: 'Pinlyx does not publish a tool by that name to this API key.',
     });
   }
   const rejection = toolRejection(tool, options);

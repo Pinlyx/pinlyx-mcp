@@ -71,7 +71,7 @@ const CAPABILITIES: ServerCapabilities = {
 
 /** Shown by clients that surface server instructions to the model. */
 const INSTRUCTIONS = [
-  'CRM Solid manages social media direct messages and scheduled posts across Instagram, Facebook,',
+  'Pinlyx manages social media direct messages and scheduled posts across Instagram, Facebook,',
   'X, LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp,',
   'alongside the contacts, deals, tasks and email threads of the CRM behind them.',
   '',
@@ -425,7 +425,7 @@ export class Bridge {
  * Chooses a JSON-RPC error code for a classified failure and keeps the message.
  *
  * Anything the user can fix by editing their configuration is `InvalidRequest`;
- * anything only CRM Solid or the network can fix is `InternalError`. Clients use
+ * anything only Pinlyx or the network can fix is `InternalError`. Clients use
  * the code to decide whether to retry, and retrying a missing scope forever is
  * exactly the behaviour this split avoids.
  */

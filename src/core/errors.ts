@@ -80,7 +80,7 @@ export class PlanError extends BridgeError {
   constructor(init: { featureKey: string | null; detail?: string }) {
     const feature = init.featureKey ? ` (feature '${init.featureKey}')` : '';
     super(
-      `Your CRM Solid plan does not include this${feature}. ` +
+      `Your Pinlyx plan does not include this${feature}. ` +
         (init.detail ? `${init.detail} ` : '') +
         `Upgrade at ${BILLING_URL}, then restart the MCP server.`,
     );
@@ -98,7 +98,7 @@ export class RateLimitError extends BridgeError {
       init.retryAfterSeconds === null
         ? 'Wait a moment and try again.'
         : `Try again in about ${init.retryAfterSeconds} second${init.retryAfterSeconds === 1 ? '' : 's'}.`;
-    super(`CRM Solid is rate limiting this API key. ${wait} ` +
+    super(`Pinlyx is rate limiting this API key. ${wait} ` +
       `Per-key limits are shown next to the key at ${KEY_SETTINGS_URL}.`);
     this.retryAfterSeconds = init.retryAfterSeconds;
   }
@@ -110,7 +110,7 @@ export class UpstreamServerError extends BridgeError {
 
   constructor(init: { status: number; detail?: string }) {
     super(
-      `CRM Solid returned a server error (HTTP ${init.status})` +
+      `Pinlyx returned a server error (HTTP ${init.status})` +
         (init.detail ? `: ${init.detail}` : '.') +
         ` This is not something your configuration can fix. Retry shortly, and check https://health.crmsolid.com if it persists.`,
     );
@@ -125,7 +125,7 @@ export class UpstreamHttpError extends BridgeError {
 
   constructor(init: { status: number; statusText?: string; body?: string | null }) {
     const detail = init.body ? `: ${truncate(init.body, 300)}` : '';
-    super(`CRM Solid rejected the request with HTTP ${init.status} ${init.statusText ?? ''}`.trimEnd() + detail);
+    super(`Pinlyx rejected the request with HTTP ${init.status} ${init.statusText ?? ''}`.trimEnd() + detail);
     this.status = init.status;
     this.body = init.body ?? null;
   }
@@ -137,7 +137,7 @@ export class UpstreamRpcError extends BridgeError {
   readonly data: unknown;
 
   constructor(init: { code: number; message: string; data?: unknown }) {
-    super(`CRM Solid could not run that request: ${init.message} (code ${init.code}).`);
+    super(`Pinlyx could not run that request: ${init.message} (code ${init.code}).`);
     this.code = init.code;
     this.data = init.data;
   }

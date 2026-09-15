@@ -67,7 +67,7 @@ export interface SendOptions {
 const RETRYABLE_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
 
 /**
- * JSON-RPC client for the remote CRM Solid MCP endpoint.
+ * JSON-RPC client for the remote Pinlyx MCP endpoint.
  *
  * Owns exactly three pieces of state: the bearer key, the `Mcp-Session-Id`
  * minted by `initialize`, and the initialize result. Everything else is a
@@ -134,7 +134,7 @@ export class UpstreamClient {
         capabilities: {},
         clientInfo,
       },
-      { idempotent: true, subject: 'Connecting to CRM Solid' },
+      { idempotent: true, subject: 'Connecting to Pinlyx' },
     );
 
     this.initializeResult = result;
@@ -163,7 +163,7 @@ export class UpstreamClient {
     const text = await response.text();
     if (!text.trim()) {
       if (response.status === 202) return undefined as T;
-      throw new UpstreamProtocolError(`CRM Solid returned an empty body for '${method}'.`);
+      throw new UpstreamProtocolError(`Pinlyx returned an empty body for '${method}'.`);
     }
 
     let frame: JsonRpcResponse<T>;
@@ -171,7 +171,7 @@ export class UpstreamClient {
       frame = JSON.parse(text) as JsonRpcResponse<T>;
     } catch {
       throw new UpstreamProtocolError(
-        `CRM Solid returned a response for '${method}' that is not JSON. ` +
+        `Pinlyx returned a response for '${method}' that is not JSON. ` +
           `This usually means something between this machine and the API (a proxy, a captive portal) ` +
           `replaced the response.`,
       );
@@ -345,12 +345,12 @@ export function rpcErrorFor(error: { code: number; message: string; data?: unkno
         subject,
       });
     }
-    return new AccessError(`${subject} was refused by CRM Solid: ${error.message}`);
+    return new AccessError(`${subject} was refused by Pinlyx: ${error.message}`);
   }
 
   if (error.code === RpcErrorCode.Unauthorized) {
     return new AuthenticationError(
-      `CRM Solid did not accept the API key: ${error.message}. ` +
+      `Pinlyx did not accept the API key: ${error.message}. ` +
         `Check CRMSOLID_API_KEY (or --api-key) and confirm the key is still active.`,
     );
   }
@@ -374,7 +374,7 @@ export async function httpErrorFor(response: Response): Promise<Error> {
 
   if (response.status === 401) {
     return new AuthenticationError(
-      `CRM Solid rejected the API key (HTTP 401). The key is missing, malformed, revoked or expired. ` +
+      `Pinlyx rejected the API key (HTTP 401). The key is missing, malformed, revoked or expired. ` +
         `Check CRMSOLID_API_KEY (or --api-key), and mint a replacement at https://app.crmsolid.com/settings/developers if needed.`,
     );
   }
@@ -389,7 +389,7 @@ export async function httpErrorFor(response: Response): Promise<Error> {
 
   if (response.status === 403) {
     return new AccessError(
-      `CRM Solid refused this API key (HTTP 403). The usual cause is the key's IP allow list: ` +
+      `Pinlyx refused this API key (HTTP 403). The usual cause is the key's IP allow list: ` +
         `this machine's address is not on it. Review the key at https://app.crmsolid.com/settings/developers.`,
     );
   }
@@ -419,13 +419,13 @@ export async function httpErrorFor(response: Response): Promise<Error> {
 export function connectionErrorFor(error: unknown, url: string, timeoutMs: number): Error {
   if (isTimeout(error)) {
     return new UpstreamConnectionError(
-      `CRM Solid did not answer within ${timeoutMs}ms (${url}). ` +
+      `Pinlyx did not answer within ${timeoutMs}ms (${url}). ` +
         `The request may still have been received. Retry, or raise the timeout with --timeout.`,
     );
   }
   const detail = error instanceof Error ? error.message : String(error);
   return new UpstreamConnectionError(
-    `Could not reach CRM Solid at ${url}: ${detail}. ` +
+    `Could not reach Pinlyx at ${url}: ${detail}. ` +
       `Check this machine's internet connection, any corporate proxy or firewall, and that CRMSOLID_BASE_URL is right.`,
     { cause: error },
   );
