@@ -12,7 +12,7 @@
 [![CI](https://github.com/Pinlyx/pinlyx-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Pinlyx/pinlyx-mcp/actions/workflows/ci.yml)
 [![node](https://img.shields.io/node/v/@crmsolid/mcp-server.svg)](https://nodejs.org)
 [![license](https://img.shields.io/npm/l/@crmsolid/mcp-server.svg)](https://github.com/Pinlyx/pinlyx-mcp/blob/main/LICENSE)
-[![AllMCPs](https://allmcps.com/api/badge/crm-solid-mcp)](https://allmcps.com/mcp/crm-solid-mcp)
+[![AllMCPs Verified](https://allmcps.com/api/badge/crm-solid-mcp)](https://allmcps.com/mcp/crm-solid-mcp?verify=54797484-c0d8-4869-a83d-ece9d69456f8)
 
 `@crmsolid/mcp-server` is an MCP server for social media. It gives Claude Desktop, Claude
 Code, Cursor, ChatGPT and any other Model Context Protocol client typed access to your
