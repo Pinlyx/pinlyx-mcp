@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-09-16
+
+### Changed
+
+- The product is now **Pinlyx**. The server title reported to clients, the messages the
+  server returns and the package metadata carry the new name, and the links point at
+  pinlyx.com, docs.pinlyx.com and github.com/Pinlyx/pinlyx-mcp.
+- Nothing on the wire changed. The package name `@crmsolid/mcp-server`, the
+  `crmsolid-mcp` binary, the `CRMSOLID_*` environment variables, the server name
+  `crmsolid` and `api.crmsolid.com` are all unchanged, so existing client
+  configurations keep working untouched.
+
 ## [0.1.0] - 2026-08-24
 
 First release. A stdio Model Context Protocol server that connects an MCP client

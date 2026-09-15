@@ -8,7 +8,7 @@
  * in a user's environment for no benefit. CI checks it against package.json
  * before publishing, so the two cannot drift.
  */
-export const VERSION = '0.1.3';
+export const VERSION = '0.1.4';
 
 /** Machine name of this server, as it appears in the local `initialize` result. */
 export const SERVER_NAME = 'crmsolid';

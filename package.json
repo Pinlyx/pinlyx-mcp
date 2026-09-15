@@ -1,6 +1,6 @@
 {
   "name": "@crmsolid/mcp-server",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "mcpName": "io.github.azorkai/crmsolid-mcp",
   "description": "Manage every social media DM and post from your AI assistant, over MCP. Stdio Model Context Protocol server for Pinlyx: Instagram, Facebook, X, LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp inboxes plus scheduled posts, for Claude Desktop, Claude Code, Cursor and ChatGPT.",
   "keywords": [
