@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the CRM Solid MCP server will be documented in this file.
+All notable changes to the Pinlyx MCP server will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First release. A stdio Model Context Protocol server that connects an MCP client
 (Claude Desktop, Claude Code, Cursor, ChatGPT, or anything else that speaks MCP) to a
-CRM Solid workspace, so social media direct messages and scheduled posts can be managed
+Pinlyx workspace, so social media direct messages and scheduled posts can be managed
 from an assistant.
 
 ### Added
@@ -33,7 +33,7 @@ from an assistant.
   `sequences`, `pipelines`, `webhooks`, `jobs`, `agents`, `accounts`, `telegram`,
   `twitter`, `analytics`). Groups are inferred from tool names by rule, so tools the API
   adds later are classified rather than dropped.
-- **`--read-only`**, which exposes only tools CRM Solid annotates `readOnlyHint` and
+- **`--read-only`**, which exposes only tools Pinlyx annotates `readOnlyHint` and
   refuses a write even when one is called by name. Both filters are enforced on the call
   path, not only in the listings: hiding a tool is advice, refusing the call is the gate.
 - **Actionable errors.** A rejected key, a missing scope, a plan-gated feature, a rate

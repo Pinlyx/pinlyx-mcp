@@ -1,6 +1,6 @@
 # Claude Desktop MCP Server Setup for Social Media DMs and Posts
 
-Running CRM Solid as a Claude Desktop MCP server takes one JSON file and one restart. Add the block below to `claude_desktop_config.json`, quit Claude Desktop completely, reopen it, and the app gains 62 tools, 21 resources and 15 prompts against your workspace: Instagram and WhatsApp DMs, LinkedIn and X posts, contacts, tasks and deals. This page covers the exact file paths on macOS and Windows, how to confirm the server loaded, the three prompts and four resources you get for social work, a read-only profile for a shared laptop, and the three failure modes that account for most broken setups.
+Running Pinlyx as a Claude Desktop MCP server takes one JSON file and one restart. Add the block below to `claude_desktop_config.json`, quit Claude Desktop completely, reopen it, and the app gains 62 tools, 21 resources and 15 prompts against your workspace: Instagram and WhatsApp DMs, LinkedIn and X posts, contacts, tasks and deals. This page covers the exact file paths on macOS and Windows, how to confirm the server loaded, the three prompts and four resources you get for social work, a read-only profile for a shared laptop, and the three failure modes that account for most broken setups.
 
 If you have not created an API key yet, do that first in [getting started](./getting-started.md). You need a key that starts with `csk_live_` and Node.js 20 or newer.
 
@@ -46,7 +46,7 @@ Then run the smoke test. Type `List my connected social accounts`, approve the c
 
 ## Approving tool calls
 
-The first time Claude wants to call a CRM Solid tool, an approval prompt appears inline in the conversation, above the assistant's reply, naming the tool and showing the arguments it intends to send. You can allow that single call or allow the tool for the rest of the chat.
+The first time Claude wants to call a Pinlyx tool, an approval prompt appears inline in the conversation, above the assistant's reply, naming the tool and showing the arguments it intends to send. You can allow that single call or allow the tool for the rest of the chat.
 
 Approve reads freely. `crm_list_social_conversations`, `crm_list_social_messages`, `crm_social_inbox_summary` and `crm_social_post_stats` are annotated `readOnly` and cannot change anything. Read the arguments before approving a write. `crm_send_social_message` sends a real DM from your brand account, and it is annotated non-idempotent, so approving it twice sends it twice. It also marks an operator takeover, which pauses the AI agent on that contact so a bot does not talk over you. Every write returns a confirmation of what changed, never a data feed, so a write result you did not expect is a signal to stop and check.
 

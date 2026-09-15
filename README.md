@@ -1,7 +1,7 @@
 <p align="center">
-  <a href="https://crmsolid.com">
+  <a href="https://pinlyx.com">
     <img src="./docs/images/mcp-server-social-media.png"
-         alt="CRM Solid MCP: read your social DM inbox and schedule posts from Claude, Cursor or ChatGPT"
+         alt="Pinlyx MCP: read your social DM inbox and schedule posts from Claude, Cursor or ChatGPT"
          width="900">
   </a>
 </p>
@@ -66,14 +66,14 @@ How did last month's posts do compared with the month before?
 ### The panel behind the tools
 
 The server is not a separate copy of your data. It reads and writes the same social
-inbox and the same posting calendar you see in [CRM Solid](https://crmsolid.com), so a
+inbox and the same posting calendar you see in [Pinlyx](https://pinlyx.com), so a
 conversation you triage from Claude is already triaged when you open the panel, and a
 post your assistant queues shows up in the calendar with everything else.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./docs/images/social-dm-inbox-dark.png">
   <img src="./docs/images/social-dm-inbox-light.png"
-       alt="Unified social DM inbox in CRM Solid, with lead scores per conversation"
+       alt="Unified social DM inbox in Pinlyx, with lead scores per conversation"
        width="900">
 </picture>
 
@@ -287,15 +287,15 @@ curl -s https://api.crmsolid.com/mcp \
 | [Troubleshooting](./docs/troubleshooting.md) | Symptom to fix, with diagnostics |
 | [FAQ](./docs/faq.md) | What MCP is, what this does and does not do |
 
-Hosted documentation: [docs.crmsolid.com/integrations/mcp/](https://docs.crmsolid.com/integrations/mcp/).
-Vendor neutral tutorials, including ones that do not involve CRM Solid at all:
+Hosted documentation: [docs.pinlyx.com/integrations/mcp/](https://docs.pinlyx.com/integrations/mcp/).
+Vendor neutral tutorials, including ones that do not involve Pinlyx at all:
 [CRM-Solid/mcp-social-media-guide](https://github.com/CRM-Solid/mcp-social-media-guide).
 
 ## Related packages
 
 - [`@crmsolid/node`](https://github.com/CRM-Solid/crmsolid-node): the REST client, for code
   that is not an AI assistant.
-- [CRM Solid Clipper](https://chromewebstore.google.com/detail/crm-solid-clipper-save-le/mbdeafjdkhilgbdaoenggfamombmgpfm):
+- [Pinlyx Clipper](https://chromewebstore.google.com/detail/crm-solid-clipper-save-le/mbdeafjdkhilgbdaoenggfamombmgpfm):
   the browser extension, for the other direction. It puts a person into the CRM from the
   page you are reading, which is where most contacts come from before any of this runs.
   Source: [CRM-Solid/crmsolid-clipper](https://github.com/CRM-Solid/crmsolid-clipper).
@@ -303,7 +303,7 @@ Vendor neutral tutorials, including ones that do not involve CRM Solid at all:
   community node, for the workflows an assistant is not in. Same API, same keys, so a
   contact your assistant files is the one an n8n branch picks up.
 - The public v1 REST API behind all of this:
-  [crmsolid.com/public-api](https://crmsolid.com/public-api).
+  [pinlyx.com/public-api](https://pinlyx.com/public-api).
 
 ## Contributing and support
 

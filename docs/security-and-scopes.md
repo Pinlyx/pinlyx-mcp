@@ -1,6 +1,6 @@
 # MCP Server Security and Scopes: Least Privilege for AI Access to Your CRM
 
-MCP server security at CRM Solid rests on one fact: an API key can do exactly what its scopes say, and nothing else. A key with `social:read` can read DM threads; the same key cannot send a message, touch a post, or open an invoice, no matter what the model is asked to do. Two properties support that boundary. The stdio proxy holds no platform credentials at all: it forwards JSON-RPC to `POST https://api.crmsolid.com/mcp` with your bearer key, and the CRM Solid backend keeps the Instagram, LinkedIn and WhatsApp connections, so no platform password or cookie ever reaches your laptop. And every write tool carries an MCP annotation, so a client that supports annotations can prompt you before a send or a publish rather than after.
+MCP server security at Pinlyx rests on one fact: an API key can do exactly what its scopes say, and nothing else. A key with `social:read` can read DM threads; the same key cannot send a message, touch a post, or open an invoice, no matter what the model is asked to do. Two properties support that boundary. The stdio proxy holds no platform credentials at all: it forwards JSON-RPC to `POST https://api.crmsolid.com/mcp` with your bearer key, and the Pinlyx backend keeps the Instagram, LinkedIn and WhatsApp connections, so no platform password or cookie ever reaches your laptop. And every write tool carries an MCP annotation, so a client that supports annotations can prompt you before a send or a publish rather than after.
 
 Keys look like `csk_live_...` and are created per workspace at [app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers). Scopes are granted per key, not per user, which is what makes the profiles further down this page possible. For the tool-by-tool view of what each scope reaches, see [the tools reference](./tools-reference.md).
 
@@ -155,10 +155,10 @@ Plain description of the data flow, because "it runs locally" is often misread a
 
 - Your MCP client starts `crmsolid-mcp` as a local process and speaks MCP over stdio to it.
 - The proxy forwards each JSON-RPC call over HTTPS to `POST https://api.crmsolid.com/mcp`, authenticated with your bearer key. Tool arguments go up, tool results come back.
-- The CRM Solid backend holds the platform connections. Instagram, LinkedIn, WhatsApp and the rest are contacted from CRM Solid infrastructure with tokens stored there, encrypted at rest. Those tokens are never sent to the proxy and never touch your machine.
+- The Pinlyx backend holds the platform connections. Instagram, LinkedIn, WhatsApp and the rest are contacted from Pinlyx infrastructure with tokens stored there, encrypted at rest. Those tokens are never sent to the proxy and never touch your machine.
 - Whatever the model reads then goes wherever your MCP client sends its context, which for a hosted assistant means the model provider. That is a property of your client, not of this server. If that matters for your data policy, decide it at the client level and use a narrow key here.
 
-The proxy is a transport. It keeps no local database and writes no transcript of your CRM data. Its diagnostic output goes to stderr and passes through a redaction step so a key cannot appear in a log line. Nothing sensitive is logged by design, because there is nowhere for it to usefully go: the proxy has no storage. Infrastructure and residency details for the backend are on the [security page](https://crmsolid.com/security).
+The proxy is a transport. It keeps no local database and writes no transcript of your CRM data. Its diagnostic output goes to stderr and passes through a redaction step so a key cannot appear in a log line. Nothing sensitive is logged by design, because there is nowhere for it to usefully go: the proxy has no storage. Infrastructure and residency details for the backend are on the [security page](https://pinlyx.com/security).
 
 ## Auditing what an assistant actually did
 

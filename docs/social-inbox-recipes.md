@@ -1,8 +1,8 @@
 # Manage Instagram DMs With AI: Social Inbox Recipes for MCP Clients
 
-To manage Instagram DMs with AI, point your MCP client at the CRM Solid server, ask for a triage summary, and approve every reply before it leaves. The six recipes below are the ones our support team runs daily. Each gives you the prompt to type, the tools the assistant calls in order, the shape of the data that comes back, and a way to turn it into a routine instead of a one-off.
+To manage Instagram DMs with AI, point your MCP client at the Pinlyx server, ask for a triage summary, and approve every reply before it leaves. The six recipes below are the ones our support team runs daily. Each gives you the prompt to type, the tools the assistant calls in order, the shape of the data that comes back, and a way to turn it into a routine instead of a one-off.
 
-Everything here works the same on Instagram, WhatsApp, LinkedIn, X and the other platforms CRM Solid connects, because every direct message lands in one inbox and one set of tools.
+Everything here works the same on Instagram, WhatsApp, LinkedIn, X and the other platforms Pinlyx connects, because every direct message lands in one inbox and one set of tools.
 
 Two conventions to keep straight before you start. MCP tool output is camelCase (`lastMessageAt`). The public v1 REST API is PascalCase (`LastMessageAt`). You only see the REST shape if you call the HTTP API directly, which these recipes do not.
 
@@ -12,7 +12,7 @@ Two conventions to keep straight before you start. MCP tool output is camelCase 
 |---|---|
 | Server installed in your client | [./getting-started.md](./getting-started.md) |
 | API key with `social:read` and `social:write` | [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) |
-| At least one social account connected in the panel | CRM Solid panel, Social settings |
+| At least one social account connected in the panel | Pinlyx panel, Social settings |
 | Client specific setup | [./claude-desktop.md](./claude-desktop.md), [./claude-code.md](./claude-code.md), [./cursor.md](./cursor.md), [./chatgpt-and-other-clients.md](./chatgpt-and-other-clients.md) |
 
 A minimal configuration, which every recipe below assumes:
@@ -113,7 +113,7 @@ The write returns a confirmation of what changed, not a data feed:
 
 Two side effects come with that send, and both are useful here. It marks an operator takeover, which pauses the AI agent on that contact so an automated reply cannot talk over you mid thread, and it writes a message activity to the contact timeline, so the rest of the team sees the answer in the CRM without you pasting anything across.
 
-Two things carry the safety of this recipe. The first is the human review step: `dm-reply-draft` only drafts, never sends, so the assistant proposes, you edit, you approve. Splitting the draft turn from the send turn is what keeps a model from talking to your customer unsupervised. The second is the write annotation. `crm_send_social_message` is marked non-idempotent, so a client that honours annotations prompts you before it sends and shows the text it is about to put in the thread, and a platform rejection comes back as an error (`The platform rejected this message: outside the 24 hour window (code 10)`) rather than being retried silently. The MCP tool takes no idempotency key; if you are writing code that sends without a human in the turn, use the v1 REST endpoint, which does accept one: [https://crmsolid.com/public-api](https://crmsolid.com/public-api).
+Two things carry the safety of this recipe. The first is the human review step: `dm-reply-draft` only drafts, never sends, so the assistant proposes, you edit, you approve. Splitting the draft turn from the send turn is what keeps a model from talking to your customer unsupervised. The second is the write annotation. `crm_send_social_message` is marked non-idempotent, so a client that honours annotations prompts you before it sends and shows the text it is about to put in the thread, and a platform rejection comes back as an error (`The platform rejected this message: outside the 24 hour window (code 10)`) rather than being retried silently. The MCP tool takes no idempotency key; if you are writing code that sends without a human in the turn, use the v1 REST endpoint, which does accept one: [https://pinlyx.com/public-api](https://pinlyx.com/public-api).
 
 **Make it a habit:** keep the draft and the send as two separate messages, permanently. If you find yourself typing "draft and send it" in one line, you have removed the review step, and the tone argument becomes the only thing standing between a bad day and your customer.
 
@@ -288,7 +288,7 @@ Tools the assistant runs:
 
 The platform with the worst unread count is the one with the highest `unreadConversations`, so the per-platform line of the report comes from the summary, not from the stats call. `crm_messaging_stats` takes `windowDays` of 1, 7 or 30 (7 by default) and an optional `accountId`, and it answers from the outbound send queue: `totals` of queued, sent and failed, plus a `successRate`. Nothing per platform, and no response times, because how fast you replied is not exposed by these tools today. Use 1 for the daily note and 7 on Fridays.
 
-Where the report goes depends on your client. In Claude Code, pipe the output into whatever posts to your team channel. In Claude Desktop or Cursor, copy it. Neither client posts to Slack on its own, and the CRM Solid server does not either: it reads and writes CRM data, nothing else.
+Where the report goes depends on your client. In Claude Code, pipe the output into whatever posts to your team channel. In Claude Desktop or Cursor, copy it. Neither client posts to Slack on its own, and the Pinlyx server does not either: it reads and writes CRM data, nothing else.
 
 **Make it a habit:** run it at a fixed time, and keep the six line cap. A report that grows stops being read within two weeks.
 
@@ -319,7 +319,7 @@ One structural guarantee helps too: no tool both reads and writes. A write retur
 
 Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp all land in the same inbox. The recipes above do not change per platform: `crm_list_social_conversations` with `platform=tiktok` behaves exactly like `platform=instagram`, and the JSON shape is identical.
 
-What does change is what each platform allows. Several only permit a free-form reply inside a limited window after the customer's last message, and require a pre-approved template outside it. Some restrict automated or bulk outbound messaging outright. Rate limits, attachment types and link handling differ. These rules are set by the platforms, they change, and they are enforced on the account you connected, not on CRM Solid.
+What does change is what each platform allows. Several only permit a free-form reply inside a limited window after the customer's last message, and require a pre-approved template outside it. Some restrict automated or bulk outbound messaging outright. Rate limits, attachment types and link handling differ. These rules are set by the platforms, they change, and they are enforced on the account you connected, not on Pinlyx.
 
 Two consequences worth planning for. If a platform rejects a send, the tool call returns an error rather than a silent success, so check the confirmation and do not assume delivery. And before you automate replies on any platform, read that platform's own developer and business messaging policy. An assistant that drafts and waits for approval is safe almost everywhere. An assistant that sends unattended is not, and the account at risk is yours.
 

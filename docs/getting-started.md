@@ -1,10 +1,10 @@
-# MCP CRM Integration: Connect CRM Solid to Any AI Assistant
+# MCP CRM Integration: Connect Pinlyx to Any AI Assistant
 
-This MCP CRM integration puts your social inbox and your CRM records inside the assistant you already use. Install one npm package, paste a nine line JSON block into your client, and Claude Desktop, Claude Code, Cursor or any other Model Context Protocol client can read an Instagram DM, draft the reply, schedule a LinkedIn post for Tuesday morning, and log all of it against a contact. The server publishes 62 tools, 21 resources and 15 prompts against your CRM Solid workspace, covering 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. Budget five minutes: one API key, one config file, one restart.
+This MCP CRM integration puts your social inbox and your CRM records inside the assistant you already use. Install one npm package, paste a nine line JSON block into your client, and Claude Desktop, Claude Code, Cursor or any other Model Context Protocol client can read an Instagram DM, draft the reply, schedule a LinkedIn post for Tuesday morning, and log all of it against a contact. The server publishes 62 tools, 21 resources and 15 prompts against your Pinlyx workspace, covering 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. Budget five minutes: one API key, one config file, one restart.
 
 ## How the MCP CRM integration fits together
 
-There are four hops. Your client launches the stdio proxy with `npx -y @crmsolid/mcp-server`. The proxy speaks MCP over stdin and stdout and forwards every `tools/list`, `tools/call`, `resources/*` and `prompts/*` call as JSON-RPC to `POST https://api.crmsolid.com/mcp`, with your bearer key in the `Authorization` header. The CRM Solid backend holds your platform connections and does the actual work: pulling the Instagram thread, sending the WhatsApp reply, queueing the LinkedIn post. Results come back down the same path.
+There are four hops. Your client launches the stdio proxy with `npx -y @crmsolid/mcp-server`. The proxy speaks MCP over stdin and stdout and forwards every `tools/list`, `tools/call`, `resources/*` and `prompts/*` call as JSON-RPC to `POST https://api.crmsolid.com/mcp`, with your bearer key in the `Authorization` header. The Pinlyx backend holds your platform connections and does the actual work: pulling the Instagram thread, sending the WhatsApp reply, queueing the LinkedIn post. Results come back down the same path.
 
 ```text
 AI client
@@ -13,14 +13,14 @@ AI client
   -> your connected platform accounts
 ```
 
-Two consequences matter on day one. No platform password, session cookie or OAuth token ever touches the machine running the proxy: those connections live server side, and the local process only ever holds your CRM Solid key. And the proxy is where local filtering happens, so `--tools` and `--read-only` are applied before the client sees a tool list. A filtered tool is not listed and not callable, whatever the assistant decides it wants.
+Two consequences matter on day one. No platform password, session cookie or OAuth token ever touches the machine running the proxy: those connections live server side, and the local process only ever holds your Pinlyx key. And the proxy is where local filtering happens, so `--tools` and `--read-only` are applied before the client sees a tool list. A filtered tool is not listed and not callable, whatever the assistant decides it wants.
 
 ## What you need before you install
 
 | Requirement | How to check |
 |---|---|
 | Node.js 20 or newer | `node --version`. The package is ESM and declares `"node": ">=20"`. |
-| A CRM Solid account | Sign in at `https://app.crmsolid.com`. Plan availability is on the [pricing page](https://crmsolid.com/pricing). |
+| A Pinlyx account | Sign in at `https://app.crmsolid.com`. Plan availability is on the [pricing page](https://pinlyx.com/pricing). |
 | At least one connected social account | Connect Instagram, WhatsApp, LinkedIn or any of the other 9 platforms in the app first. |
 | An MCP capable client | Claude Desktop, Claude Code, Cursor, VS Code agent mode, Windsurf, Zed and others. |
 

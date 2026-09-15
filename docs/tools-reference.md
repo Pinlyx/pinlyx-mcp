@@ -1,10 +1,10 @@
-# MCP Tools for Social Media: Complete CRM Solid Tool Reference
+# MCP Tools for Social Media: Complete Pinlyx Tool Reference
 
-The CRM Solid MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside the 49 CRM tools that already shipped, so a single connection gives an assistant contacts, deals, tasks, email, finance, analytics and the whole social surface. Run the server locally over stdio with `npx -y @crmsolid/mcp-server`, or point a remote client at the hosted endpoint `POST https://api.crmsolid.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
+The Pinlyx MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside the 49 CRM tools that already shipped, so a single connection gives an assistant contacts, deals, tasks, email, finance, analytics and the whole social surface. Run the server locally over stdio with `npx -y @crmsolid/mcp-server`, or point a remote client at the hosted endpoint `POST https://api.crmsolid.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
 
 Two casing rules, stated once: MCP tool output is camelCase, and the public v1 REST API at `https://api.crmsolid.com/v1` is PascalCase. Same data, two surfaces, never mixed inside one payload. Every example on this page is MCP output, so every key here is camelCase.
 
-Every id on this surface is an integer. Conversations, messages, posts, accounts and contacts are all numeric, and they arrive as JSON numbers rather than quoted strings. The one string identifier you will see is `externalAccountId`, which is the id the upstream network uses, not a CRM Solid id.
+Every id on this surface is an integer. Conversations, messages, posts, accounts and contacts are all numeric, and they arrive as JSON numbers rather than quoted strings. The one string identifier you will see is `externalAccountId`, which is the id the upstream network uses, not a Pinlyx id.
 
 If you have not installed the server yet, start at [getting started](./getting-started.md), then the client page you need: [Claude Desktop](./claude-desktop.md), [Claude Code](./claude-code.md), [Cursor](./cursor.md), or [ChatGPT and other clients](./chatgpt-and-other-clients.md).
 
@@ -78,7 +78,7 @@ Lists the social accounts connected to the workspace, with the platform and the 
 }
 ```
 
-Notes: the default hides accounts that are no longer active, so pass `includeInactive: true` when an assistant needs to explain why a platform disappeared rather than silently dropping it. `id` is the CRM Solid account id, and it is what `accountIds` expects on a schedule call. `externalAccountId` is the upstream id and is a string. `dailyPostLimit` is enforced at schedule time, so it is worth reading before planning a busy day.
+Notes: the default hides accounts that are no longer active, so pass `includeInactive: true` when an assistant needs to explain why a platform disappeared rather than silently dropping it. `id` is the Pinlyx account id, and it is what `accountIds` expects on a schedule call. `externalAccountId` is the upstream id and is a string. `dailyPostLimit` is enforced at schedule time, so it is worth reading before planning a busy day.
 
 ## crm_list_social_conversations
 
@@ -276,7 +276,7 @@ A rejection comes back as an error, not as a silent success a client might feel 
 
 And marking read is naturally repeatable: `crm_mark_social_conversation_read` leaves the same end state however often it runs. So the triage loop of read, reply, mark read has exactly one step a human should approve, and the rest costs nothing to repeat.
 
-If you are integrating in code rather than through an assistant and you need a key that makes an automated retry safe, use the v1 REST endpoint instead: `POST /v1/social/conversations/{id}/messages` accepts an `IdempotencyKey` in its body, documented at [crmsolid.com/public-api](https://crmsolid.com/public-api).
+If you are integrating in code rather than through an assistant and you need a key that makes an automated retry safe, use the v1 REST endpoint instead: `POST /v1/social/conversations/{id}/messages` accepts an `IdempotencyKey` in its body, documented at [pinlyx.com/public-api](https://pinlyx.com/public-api).
 
 Notes: platform reply windows still apply, and a send into a thread the platform has closed fails with a readable error naming the window, for example `The platform rejected this message: outside the 24 hour window (code 10)`. WhatsApp is the strict one at 24 hours from the customer's last message.
 
@@ -549,7 +549,7 @@ Cancels a post that has not been published. The post stays in the CRM with `stat
 
 ### Cancel is not delete
 
-The server never deletes a post that already went out upstream. Cancel only affects a post that has not been published, which on this surface means a pending or a failed one whose time has passed or not yet arrived. Once a post is live on LinkedIn or Instagram, cancelling it in CRM Solid would give you a false record, and reaching into the platform to remove it is not something an assistant should be able to do from a chat window. Call `crm_cancel_social_post` on a published post and it is refused with `This post is already published; the copy on the network cannot be withdrawn from here`. To take down a live post, remove it on the platform, or from the social scheduler in the CRM Solid panel where a human confirms the action.
+The server never deletes a post that already went out upstream. Cancel only affects a post that has not been published, which on this surface means a pending or a failed one whose time has passed or not yet arrived. Once a post is live on LinkedIn or Instagram, cancelling it in Pinlyx would give you a false record, and reaching into the platform to remove it is not something an assistant should be able to do from a chat window. Call `crm_cancel_social_post` on a published post and it is refused with `This post is already published; the copy on the network cannot be withdrawn from here`. To take down a live post, remove it on the platform, or from the social scheduler in the Pinlyx panel where a human confirms the action.
 
 Notes: safe to repeat. Cancelling a post that is already cancelled succeeds and says so, answering `Post was already cancelled.` instead of failing, so a retry after a dropped connection costs nothing. Remember that `postIds` from a schedule call is an array: cancelling a two platform fan out is two calls, one per id.
 
@@ -589,7 +589,7 @@ Aggregates publishing outcomes over a window, so an assistant can answer "did ev
 }
 ```
 
-Notes: the figures above are illustrative. This tool counts publishing outcomes and nothing else. There are no impressions, no engagements and no reach anywhere in the payload, because CRM Solid does not pull per post analytics back from the networks. It answers "what went out and what failed", not "how did it perform"; for the latter, hand over the `publishedUrl` from `crm_get_social_post` and point at the network's own insights. The window is measured on scheduled time, so a post scheduled inside it but still pending counts toward `total` and `pending`. `lastPublishedAt` is the fastest way to spot a scheduler that has quietly stopped: a date several days old beside a healthy `pending` count is the signature.
+Notes: the figures above are illustrative. This tool counts publishing outcomes and nothing else. There are no impressions, no engagements and no reach anywhere in the payload, because Pinlyx does not pull per post analytics back from the networks. It answers "what went out and what failed", not "how did it perform"; for the latter, hand over the `publishedUrl` from `crm_get_social_post` and point at the network's own insights. The window is measured on scheduled time, so a post scheduled inside it but still pending counts toward `total` and `pending`. `lastPublishedAt` is the fastest way to spot a scheduler that has quietly stopped: a date several days old beside a healthy `pending` count is the signature.
 
 ## Paging the MCP surface: limit and beforeMessageId
 
@@ -680,7 +680,7 @@ Second call, older than the lowest id from the first page (`88212`):
 
 A `count` lower than the `limit` you asked for means you have reached the start of the thread. Stop there. Two habits worth putting in a system prompt: never loop without a stop condition, and prefer `crm_social_inbox_summary` over listing threads when all you need is a count.
 
-Cursor pagination does exist, but it belongs to the v1 REST API, not to MCP. There, `?after=<id>` returns an envelope of `items`, `nextCursor` and `hasMore`, and you walk it until `hasMore` is false. That is the surface to reach for when you are writing code against a large workspace rather than driving an assistant, and it is documented at [crmsolid.com/public-api](https://crmsolid.com/public-api). Do not send `after` to an MCP tool: it is not in the schema, so it is ignored rather than honoured.
+Cursor pagination does exist, but it belongs to the v1 REST API, not to MCP. There, `?after=<id>` returns an envelope of `items`, `nextCursor` and `hasMore`, and you walk it until `hasMore` is false. That is the surface to reach for when you are writing code against a large workspace rather than driving an assistant, and it is documented at [pinlyx.com/public-api](https://pinlyx.com/public-api). Do not send `after` to an MCP tool: it is not in the schema, so it is ignored rather than honoured.
 
 ## Error handling: scope failures, rate limits and the write rule
 
@@ -801,4 +801,4 @@ Add `--read-only` to drop every write tool before the client ever sees the list.
 - Fix a client that lists no tools with [troubleshooting](./troubleshooting.md).
 - Short answers to common questions are in the [FAQ](./faq.md), and the package overview is in the [README](../README.md).
 
-The REST surface these tools wrap is documented at [crmsolid.com/public-api](https://crmsolid.com/public-api), the package is on [npm](https://www.npmjs.com/package/@crmsolid/mcp-server), and the protocol itself is specified at [modelcontextprotocol.io](https://modelcontextprotocol.io).
+The REST surface these tools wrap is documented at [pinlyx.com/public-api](https://pinlyx.com/public-api), the package is on [npm](https://www.npmjs.com/package/@crmsolid/mcp-server), and the protocol itself is specified at [modelcontextprotocol.io](https://modelcontextprotocol.io).

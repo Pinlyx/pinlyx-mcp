@@ -1,4 +1,4 @@
-# MCP Server Troubleshooting: Fixing a CRM Solid Connection That Will Not Start
+# MCP Server Troubleshooting: Fixing a Pinlyx Connection That Will Not Start
 
 Most MCP server troubleshooting ends in one of four places: the config file has a syntax error, the client cannot find `npx`, Node is older than 20, or the API key is wrong or under-scoped. Work through the three isolation checks below first, because they tell you whether the fault is your key, your network or your client, and every symptom section after that assumes you know which one it is.
 
@@ -121,7 +121,7 @@ Put the result in `command`. On Windows use `npx.cmd`, not `npx`. If you use nvm
 
 **Cause.** Too many calls in too short a window on that key. It shows up most often when an assistant loops over a long conversation list and fetches messages for each one without a limit.
 
-**Fix.** Retry after a pause. Then remove the cause: put a `limit` in your prompt (1 to 100, default 25), ask for one platform at a time instead of all twelve, and let the assistant walk message history with `beforeMessageId` rather than pulling everything at once. Current limits are published on [https://crmsolid.com/public-api](https://crmsolid.com/public-api).
+**Fix.** Retry after a pause. Then remove the cause: put a `limit` in your prompt (1 to 100, default 25), ask for one platform at a time instead of all twelve, and let the assistant walk message history with `beforeMessageId` rather than pulling everything at once. Current limits are published on [https://pinlyx.com/public-api](https://pinlyx.com/public-api).
 
 ## A tool is in the docs but not in the client's tool list
 
@@ -145,7 +145,7 @@ Put the result in `command`. On Windows use `npx.cmd`, not `npx`. If you use nvm
 
 **Cause.** No social account is connected to the workspace behind that key, or all conversations are filtered out by the arguments used. A `count` of 0 with an empty `conversations` array is a real answer, not an error.
 
-**Fix.** Ask the assistant to call `crm_list_social_accounts` first. If that returns nothing, connect an account in the CRM Solid panel: the MCP server never holds platform credentials itself, so there is nothing to fix on your machine. If accounts exist but conversations do not, drop the filters and retry without `status` or `platform` before assuming something is broken.
+**Fix.** Ask the assistant to call `crm_list_social_accounts` first. If that returns nothing, connect an account in the Pinlyx panel: the MCP server never holds platform credentials itself, so there is nothing to fix on your machine. If accounts exist but conversations do not, drop the filters and retry without `status` or `platform` before assuming something is broken.
 
 ## The first call times out
 

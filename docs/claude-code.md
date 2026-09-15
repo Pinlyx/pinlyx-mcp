@@ -1,6 +1,6 @@
 # Claude Code MCP Server: Manage Social DMs From the Terminal
 
-Adding CRM Solid as a Claude Code MCP server is one command, and after it you can triage an Instagram inbox, draft a launch post from your own `CHANGELOG.md`, and queue it for tomorrow morning without leaving the terminal. The server publishes 62 tools, 21 resources and 15 prompts across 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. This page covers `claude mcp add`, the project scoped `.mcp.json` you can commit, per project `--tools` narrowing, checking the connection with `/mcp`, and a release day routine end to end.
+Adding Pinlyx as a Claude Code MCP server is one command, and after it you can triage an Instagram inbox, draft a launch post from your own `CHANGELOG.md`, and queue it for tomorrow morning without leaving the terminal. The server publishes 62 tools, 21 resources and 15 prompts across 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. This page covers `claude mcp add`, the project scoped `.mcp.json` you can commit, per project `--tools` narrowing, checking the connection with `/mcp`, and a release day routine end to end.
 
 You need Node.js 20 or newer and an API key starting with `csk_live_`. Create one in [getting started](./getting-started.md) if you have not.
 
@@ -52,7 +52,7 @@ A support repo does not need finance tools. A marketing repo does not need deals
 
 `--tools` and `--read-only` run inside the local proxy, so a filtered tool is not listed and not callable. `--read-only` drops every write tool before Claude Code ever sees the list.
 
-Be deliberate about this in Claude Code specifically. It is a terminal client, so CRM Solid tools sit in the same approval loop as file edits, `git` and arbitrary shell commands. An agent already permitted to run commands in your repo is one confused step away from also sending a DM from your brand account. On any machine that is shared, on any long autonomous run, and on CI, `--read-only` is the right default, and a second API key holding only `social:read` and `posts:read` is better still. Local flags protect against a confused assistant, key scopes protect against a copied config. See [security and scopes](./security-and-scopes.md).
+Be deliberate about this in Claude Code specifically. It is a terminal client, so Pinlyx tools sit in the same approval loop as file edits, `git` and arbitrary shell commands. An agent already permitted to run commands in your repo is one confused step away from also sending a DM from your brand account. On any machine that is shared, on any long autonomous run, and on CI, `--read-only` is the right default, and a second API key holding only `social:read` and `posts:read` is better still. Local flags protect against a confused assistant, key scopes protect against a copied config. See [security and scopes](./security-and-scopes.md).
 
 ## Check it loaded with /mcp
 
@@ -84,7 +84,7 @@ That prints a version and exits. A failure there is Node or network, not Claude 
 
 ## Worked example: a release day routine
 
-The point of having CRM Solid next to your file tools is that the source of truth for a launch post is already in the repo.
+The point of having Pinlyx next to your file tools is that the source of truth for a launch post is already in the repo.
 
 Ask for it in one message:
 
@@ -96,7 +96,7 @@ Europe/Istanbul. Do not publish it now.
 
 What runs, in order:
 
-1. Claude Code reads `CHANGELOG.md` with its own file tools. No CRM Solid tool involved.
+1. Claude Code reads `CHANGELOG.md` with its own file tools. No Pinlyx tool involved.
 2. `crm_list_social_accounts` resolves which LinkedIn and X accounts you have, and returns their ids.
 3. `crm_schedule_social_post` is called with `content`, `platforms`, `accountIds` and `scheduledAt`. You approve it after reading the arguments, and `scheduledAt` is the one to read hardest. Either carry the offset (`2026-08-26T09:00:00+03:00`, or the same instant written `2026-08-26T06:00:00Z`), or pass a bare wall clock with `timeZone` set (`2026-08-26T09:00:00` plus `Europe/Istanbul`) and let the server convert it. A bare wall clock with no `timeZone` beside it is taken as UTC, which is how a nine in the morning post goes out at noon.
 

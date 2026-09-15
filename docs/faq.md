@@ -1,6 +1,6 @@
-# What Is an MCP Server? CRM Solid Social MCP Questions Answered
+# What Is an MCP Server? Pinlyx Social MCP Questions Answered
 
-What is an MCP server? It is a small program that gives an AI assistant a defined set of tools it can call, over the Model Context Protocol. The CRM Solid MCP server gives your assistant tools for social DMs, scheduled posts, contacts, tasks and reporting, so you can manage every social media DM and post from your AI assistant instead of switching to a browser tab.
+What is an MCP server? It is a small program that gives an AI assistant a defined set of tools it can call, over the Model Context Protocol. The Pinlyx MCP server gives your assistant tools for social DMs, scheduled posts, contacts, tasks and reporting, so you can manage every social media DM and post from your AI assistant instead of switching to a browser tab.
 
 The answers below are grouped: understanding MCP, setup, what it can do, security and privacy, limits and costs, and where to go when something breaks.
 
@@ -10,23 +10,23 @@ The answers below are grouped: understanding MCP, setup, what it can do, securit
 
 A server that exposes tools, resources and prompts to an AI client over a standard protocol. Instead of every application inventing its own plugin format, an MCP client can talk to any MCP server the same way: it lists the tools, decides which one to call, sends arguments, and gets structured JSON back. MCP is an open specification with an open source SDK, and clients from several vendors implement it, which is why we shipped one server rather than one integration per assistant. The full specification is at [https://modelcontextprotocol.io](https://modelcontextprotocol.io).
 
-### How does the CRM Solid server actually connect?
+### How does the Pinlyx server actually connect?
 
-The npm package runs locally over stdio and forwards JSON-RPC to `POST https://api.crmsolid.com/mcp` with your bearer key. It is a transport, not a copy of your CRM. The platform connections (Instagram, WhatsApp and the rest) live on the CRM Solid backend, which is why no platform password or cookie ever touches your machine. The same data is available to your own code through the public REST API at `https://api.crmsolid.com/v1`, which uses PascalCase JSON instead of the camelCase the MCP tools return: see [https://crmsolid.com/public-api](https://crmsolid.com/public-api).
+The npm package runs locally over stdio and forwards JSON-RPC to `POST https://api.crmsolid.com/mcp` with your bearer key. It is a transport, not a copy of your CRM. The platform connections (Instagram, WhatsApp and the rest) live on the Pinlyx backend, which is why no platform password or cookie ever touches your machine. The same data is available to your own code through the public REST API at `https://api.crmsolid.com/v1`, which uses PascalCase JSON instead of the camelCase the MCP tools return: see [https://pinlyx.com/public-api](https://pinlyx.com/public-api).
 
 ### Do I need to be a developer to use this?
 
 No, but you do need to edit one JSON file and be comfortable if something needs a terminal command. There is no code to write. Most people finish setup in under ten minutes by following [./getting-started.md](./getting-started.md) and copying the config block for their client.
 
-### Which MCP clients work with CRM Solid?
+### Which MCP clients work with Pinlyx?
 
 Any client that supports MCP servers over stdio. We test Claude Desktop, Claude Code and Cursor, and each has its own page: [./claude-desktop.md](./claude-desktop.md), [./claude-code.md](./claude-code.md), [./cursor.md](./cursor.md). ChatGPT and other clients are covered in [./chatgpt-and-other-clients.md](./chatgpt-and-other-clients.md), where support varies by client and by plan, so check that page before assuming a feature exists.
 
-### Does this replace the CRM Solid panel?
+### Does this replace the Pinlyx panel?
 
 No. It is a second way in, for the things an assistant is good at: triage, drafting, summarising, bulk review. The panel is still where you connect accounts, manage team members, create API keys, handle billing and see the visual pipeline. Some actions exist only in the panel by design.
 
-## Setting up the CRM Solid MCP server
+## Setting up the Pinlyx MCP server
 
 ### What Node version do I need?
 
@@ -44,7 +44,7 @@ Put the version in the package specifier: `"args": ["-y", "@crmsolid/mcp-server@
 
 At [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers). Keys look like `csk_live_...` and carry scopes, granted per key. New keys get `social:read`, `social:write`, `posts:read` and `posts:write` by default. Anything else, for example `tasks:write` or `analytics:read`, you grant deliberately.
 
-### Can I run two CRM Solid servers side by side?
+### Can I run two Pinlyx servers side by side?
 
 Yes, and it is a good pattern. Add two entries with different names: one read-only for research and reporting, one with writes for the work that needs them. The client shows both, and you pick which to use per conversation.
 
@@ -69,7 +69,7 @@ Yes, and it is a good pattern. Add two entries with different names: one read-on
 
 No. The local process starts fine, but every tool call goes to `api.crmsolid.com`, so with no network you get connection errors. There is no local cache and no offline queue.
 
-## What the CRM Solid MCP server can do
+## What the Pinlyx MCP server can do
 
 ### Does it work with Instagram and WhatsApp?
 
@@ -81,7 +81,7 @@ Yes, both, along with Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads,
 
 ### Can it post without asking me?
 
-Not by accident. `scheduledAt` is required unless `publishNow: true` is passed, so an assistant that forgets to say when gets `scheduledAt is required unless publishNow is true` back rather than a live post. Sending a DM is the same story: `crm_send_social_message` is annotated as a write, so your client prompts before it runs and shows you the text, and a platform rejection comes back as an error instead of a silent retry. The MCP tool takes no idempotency key; code that sends with no human in the turn should use the v1 REST endpoint, which does accept one, at [https://crmsolid.com/public-api](https://crmsolid.com/public-api). Keep the draft turn and the send turn as separate messages, permanently, and drop write tools entirely with `--read-only` when you do not need them. Working patterns are in [./content-scheduling-recipes.md](./content-scheduling-recipes.md) and [./social-inbox-recipes.md](./social-inbox-recipes.md).
+Not by accident. `scheduledAt` is required unless `publishNow: true` is passed, so an assistant that forgets to say when gets `scheduledAt is required unless publishNow is true` back rather than a live post. Sending a DM is the same story: `crm_send_social_message` is annotated as a write, so your client prompts before it runs and shows you the text, and a platform rejection comes back as an error instead of a silent retry. The MCP tool takes no idempotency key; code that sends with no human in the turn should use the v1 REST endpoint, which does accept one, at [https://pinlyx.com/public-api](https://pinlyx.com/public-api). Keep the draft turn and the send turn as separate messages, permanently, and drop write tools entirely with `--read-only` when you do not need them. Working patterns are in [./content-scheduling-recipes.md](./content-scheduling-recipes.md) and [./social-inbox-recipes.md](./social-inbox-recipes.md).
 
 ### Can it see my email, deals and invoices too?
 
@@ -91,11 +91,11 @@ Yes, if the key has those scopes and you have not narrowed the surface. `--tools
 
 ### Is my data used for training?
 
-Not by CRM Solid. The npm package is a transport: it holds nothing, writes no logs of your message content, and stores no copy of your CRM. Your assistant is a separate matter: whatever your MCP client sends to its model provider is governed by that provider's policy, so if a model reads a DM in order to draft a reply, the provider's terms apply to that text. Our position is on [https://crmsolid.com/security](https://crmsolid.com/security).
+Not by Pinlyx. The npm package is a transport: it holds nothing, writes no logs of your message content, and stores no copy of your CRM. Your assistant is a separate matter: whatever your MCP client sends to its model provider is governed by that provider's policy, so if a model reads a DM in order to draft a reply, the provider's terms apply to that text. Our position is on [https://pinlyx.com/security](https://pinlyx.com/security).
 
 ### Does my Instagram password go anywhere near my laptop?
 
-No. Platform connections are held by the CRM Solid backend and authorised in the panel. The local process only ever sees your CRM Solid bearer key and the JSON that flows through it.
+No. Platform connections are held by the Pinlyx backend and authorised in the panel. The local process only ever sees your Pinlyx bearer key and the JSON that flows through it.
 
 ### What happens if the model hallucinates a send?
 
@@ -117,15 +117,15 @@ You can run the proxy yourself: it is MIT licensed and the source is at [https:/
 
 ### What are the rate limits?
 
-Limits apply per key and are published on [https://crmsolid.com/public-api](https://crmsolid.com/public-api). In practice, the way to stay under them is to put a `limit` in your prompts (1 to 100, default 25) and step back through history with `beforeMessageId` instead of asking an assistant to pull an entire inbox at once. A 429 means back off and retry.
+Limits apply per key and are published on [https://pinlyx.com/public-api](https://pinlyx.com/public-api). In practice, the way to stay under them is to put a `limit` in your prompts (1 to 100, default 25) and step back through history with `beforeMessageId` instead of asking an assistant to pull an entire inbox at once. A 429 means back off and retry.
 
 ### Does the MCP server cost extra?
 
-The package is free and MIT licensed. What it can reach depends on your CRM Solid plan and the scopes on your key, since some features are plan-gated in the product itself. Current plans are listed at [https://crmsolid.com/pricing](https://crmsolid.com/pricing). Your MCP client's own model usage is billed by whoever provides it, not by us.
+The package is free and MIT licensed. What it can reach depends on your Pinlyx plan and the scopes on your key, since some features are plan-gated in the product itself. Current plans are listed at [https://pinlyx.com/pricing](https://pinlyx.com/pricing). Your MCP client's own model usage is billed by whoever provides it, not by us.
 
 ### What happens when a platform revokes a connection?
 
-Calls that touch that account start failing, usually with an authorisation error from the platform passed back through the tool call. Platforms revoke for their own reasons: an expired token, a password change, a policy action, or a permission removed by the account owner. Reconnect the account in the CRM Solid panel. Nothing on your machine needs to change, and other platforms keep working.
+Calls that touch that account start failing, usually with an authorisation error from the platform passed back through the tool call. Platforms revoke for their own reasons: an expired token, a password change, a policy action, or a permission removed by the account owner. Reconnect the account in the Pinlyx panel. Nothing on your machine needs to change, and other platforms keep working.
 
 ## When something is not working
 
@@ -151,4 +151,4 @@ At [https://github.com/CRM-Solid/crmsolid-mcp/issues](https://github.com/CRM-Sol
 - [./social-inbox-recipes.md](./social-inbox-recipes.md) and [./content-scheduling-recipes.md](./content-scheduling-recipes.md) for working prompts
 - [./tools-reference.md](./tools-reference.md) for every tool, argument and scope
 - [./security-and-scopes.md](./security-and-scopes.md) for keys, scopes and rotation
-- [../README.md](../README.md) and [https://docs.crmsolid.com/integrations/mcp/](https://docs.crmsolid.com/integrations/mcp/)
+- [../README.md](../README.md) and [https://docs.pinlyx.com/integrations/mcp/](https://docs.pinlyx.com/integrations/mcp/)

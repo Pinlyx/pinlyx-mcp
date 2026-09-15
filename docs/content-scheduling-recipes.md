@@ -1,6 +1,6 @@
 # Schedule Social Posts With AI: Content Recipes for MCP Clients
 
-To schedule social posts with AI, connect the CRM Solid MCP server to your assistant and let it put dated posts on the calendar, which you then review and move. The six recipes below cover a full month of work: planning a week, cross-posting one idea, auditing the calendar, moving things around a launch, mining your DMs for topics, and reviewing what actually went out.
+To schedule social posts with AI, connect the Pinlyx MCP server to your assistant and let it put dated posts on the calendar, which you then review and move. The six recipes below cover a full month of work: planning a week, cross-posting one idea, auditing the calendar, moving things around a launch, mining your DMs for topics, and reviewing what actually went out.
 
 **`scheduledAt` is required unless `publishNow: true` is passed. Leave out both and the call is rejected with `scheduledAt is required unless publishNow is true`, and nothing is created.** That single rule is why it is safe to let a model touch your calendar at all: an assistant that forgets to say when gets a rejection, never a surprise publish. It is repeated in every recipe below where it matters.
 
@@ -12,7 +12,7 @@ MCP tool output is camelCase (`scheduledAt`). The public v1 REST API is PascalCa
 |---|---|
 | Server installed in your client | [./getting-started.md](./getting-started.md) |
 | API key with `posts:read` and `posts:write` | [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) |
-| Social accounts connected in the panel | CRM Solid panel, Social settings |
+| Social accounts connected in the panel | Pinlyx panel, Social settings |
 | Recipes 5 and 6 also need `social:read` and `analytics:read` | [./security-and-scopes.md](./security-and-scopes.md) |
 
 ```jsonc
@@ -164,7 +164,7 @@ Tools the assistant runs:
 
 Cancel and move are different actions and the assistant will happily do the wrong one, so name them separately in the prompt. `crm_cancel_social_post` is idempotent: cancelling an already cancelled post is not an error, which makes a half finished incident pass safe to re-run.
 
-The hard limit: **a post that has already gone out is never deleted upstream.** Cancelling stops a `pending` post from publishing. Aim it at something already published and the server answers "This post is already published; the copy on the network cannot be withdrawn from here". No tool in this server reaches into Instagram or LinkedIn to remove a live post. If something is already public and has to come down, remove it in the platform's own app or in the CRM Solid panel.
+The hard limit: **a post that has already gone out is never deleted upstream.** Cancelling stops a `pending` post from publishing. Aim it at something already published and the server answers "This post is already published; the copy on the network cannot be withdrawn from here". No tool in this server reaches into Instagram or LinkedIn to remove a live post. If something is already public and has to come down, remove it in the platform's own app or in the Pinlyx panel.
 
 For a launch, run the same recipe in reverse: cancel nothing, move the surrounding posts out of the launch window, and leave a clear hour on either side of the announcement.
 
