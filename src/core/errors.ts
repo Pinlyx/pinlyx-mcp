@@ -16,10 +16,10 @@ import { redact } from './redact.js';
  */
 
 /** Where a person goes to mint, scope or rotate a key. Quoted in several messages. */
-export const KEY_SETTINGS_URL = 'https://app.crmsolid.com/settings/developers';
+export const KEY_SETTINGS_URL = 'https://app.pinlyx.com/settings/developers';
 
 /** Where a person goes to change plan. */
-export const BILLING_URL = 'https://app.crmsolid.com/billing';
+export const BILLING_URL = 'https://app.pinlyx.com/billing';
 
 /** Base class for everything this package throws. `instanceof BridgeError` catches all of it. */
 export class BridgeError extends Error {

@@ -42,7 +42,7 @@ Put the version in the package specifier: `"args": ["-y", "@crmsolid/mcp-server@
 
 ### Where do I get an API key?
 
-At [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers). Keys look like `csk_live_...` and carry scopes, granted per key. New keys get `social:read`, `social:write`, `posts:read` and `posts:write` by default. Anything else, for example `tasks:write` or `analytics:read`, you grant deliberately.
+At [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers). Keys look like `csk_live_...` and carry scopes, granted per key. New keys get `social:read`, `social:write`, `posts:read` and `posts:write` by default. Anything else, for example `tasks:write` or `analytics:read`, you grant deliberately.
 
 ### Can I run two Pinlyx servers side by side?
 

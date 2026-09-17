@@ -11,7 +11,7 @@ Two conventions to keep straight before you start. MCP tool output is camelCase 
 | Requirement | Where |
 |---|---|
 | Server installed in your client | [./getting-started.md](./getting-started.md) |
-| API key with `social:read` and `social:write` | [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) |
+| API key with `social:read` and `social:write` | [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) |
 | At least one social account connected in the panel | Pinlyx panel, Social settings |
 | Client specific setup | [./claude-desktop.md](./claude-desktop.md), [./claude-code.md](./claude-code.md), [./cursor.md](./cursor.md), [./chatgpt-and-other-clients.md](./chatgpt-and-other-clients.md) |
 
@@ -297,7 +297,7 @@ Where the report goes depends on your client. In Claude Code, pipe the output in
 Assume it will try, eventually. Four layers stop it, and you should have at least two on at any time.
 
 1. **Client approval prompts.** Every MCP client asks before a tool call, but the granularity differs: some ask per call, some let you approve a tool for the session, some let you allow a whole server. Set yours to ask for each write and never blanket-approve `crm_send_social_message`. Client specifics are in [./claude-desktop.md](./claude-desktop.md), [./claude-code.md](./claude-code.md) and [./cursor.md](./cursor.md).
-2. **A read-only key.** Create a second key with only `social:read` and `posts:read` at [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) and use it for research, drafting and reporting. A write attempt on that key fails at the API with 403, whatever the client decides locally.
+2. **A read-only key.** Create a second key with only `social:read` and `posts:read` at [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) and use it for research, drafting and reporting. A write attempt on that key fails at the API with 403, whatever the client decides locally.
 3. **`--read-only`.** The flag drops every write tool in the local proxy before your client ever sees the list. A tool that is not listed cannot be called by a confused model, a jailbroken prompt or a bad paste.
 4. **`--tools`.** `--tools social,posts` narrows the exposed surface to those families. The filter also runs locally, so a filtered tool is neither listed nor callable.
 

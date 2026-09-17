@@ -36,7 +36,7 @@ accounts. Nothing to install: `npx` fetches the package on first run.
 }
 ```
 
-Create the key at [app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers).
+Create the key at [app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers).
 Config file locations per client:
 
 | Client | Config file |

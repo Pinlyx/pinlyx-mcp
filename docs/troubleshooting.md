@@ -109,7 +109,7 @@ Put the result in `command`. On Windows use `npx.cmd`, not `npx`. If you use nvm
 
 **Cause.** The key is missing, malformed, revoked, or belongs to a different environment. A key that was pasted with a trailing space or a newline fails the same way as no key at all.
 
-**Fix.** Confirm the key starts with `csk_live_` and has no whitespace around it. Re-run the `curl` isolation check with the key inline rather than from an environment variable, which rules out the variable not being set in the client's environment. Create a fresh key at [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) if in doubt: revoking and reissuing takes seconds and eliminates a whole class of guessing. Details on key handling are in [./security-and-scopes.md](./security-and-scopes.md).
+**Fix.** Confirm the key starts with `csk_live_` and has no whitespace around it. Re-run the `curl` isolation check with the key inline rather than from an environment variable, which rules out the variable not being set in the client's environment. Create a fresh key at [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) if in doubt: revoking and reissuing takes seconds and eliminates a whole class of guessing. Details on key handling are in [./security-and-scopes.md](./security-and-scopes.md).
 
 ## 403 forbidden on one tool while others work
 

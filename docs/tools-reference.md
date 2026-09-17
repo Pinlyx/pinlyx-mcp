@@ -724,7 +724,7 @@ A **scope failure** is different, and it is the one you will hit most often, bec
 }
 ```
 
-`data.requiredScope` is the actionable field and `data.granted` shows what the key actually carries, so the gap is visible without a second call. Add exactly that scope to the key at `https://app.crmsolid.com/settings/developers`, then restart the MCP server so it re-reads the key. Code `-32001` is the neighbouring case: the key itself is missing, malformed, revoked or expired.
+`data.requiredScope` is the actionable field and `data.granted` shows what the key actually carries, so the gap is visible without a second call. Add exactly that scope to the key at `https://app.pinlyx.com/settings/developers`, then restart the MCP server so it re-reads the key. Code `-32001` is the neighbouring case: the key itself is missing, malformed, revoked or expired.
 
 A **rate limit** is a 429 from the public API with a `Retry-After` header in seconds:
 

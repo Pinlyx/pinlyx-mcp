@@ -2,7 +2,7 @@
 
 MCP server security at Pinlyx rests on one fact: an API key can do exactly what its scopes say, and nothing else. A key with `social:read` can read DM threads; the same key cannot send a message, touch a post, or open an invoice, no matter what the model is asked to do. Two properties support that boundary. The stdio proxy holds no platform credentials at all: it forwards JSON-RPC to `POST https://api.crmsolid.com/mcp` with your bearer key, and the Pinlyx backend keeps the Instagram, LinkedIn and WhatsApp connections, so no platform password or cookie ever reaches your laptop. And every write tool carries an MCP annotation, so a client that supports annotations can prompt you before a send or a publish rather than after.
 
-Keys look like `csk_live_...` and are created per workspace at [app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers). Scopes are granted per key, not per user, which is what makes the profiles further down this page possible. For the tool-by-tool view of what each scope reaches, see [the tools reference](./tools-reference.md).
+Keys look like `csk_live_...` and are created per workspace at [app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers). Scopes are granted per key, not per user, which is what makes the profiles further down this page possible. For the tool-by-tool view of what each scope reaches, see [the tools reference](./tools-reference.md).
 
 ## The four social scopes, and what each one does not grant
 
@@ -104,7 +104,7 @@ State it plainly: `--read-only` and `--tools` protect you against a confused mod
 - **One key per client per machine.** Your laptop's Claude Desktop and your teammate's Cursor get separate keys. Rate limits are enforced per key, so shared keys also throttle each other, and per-key attribution in the audit trail is worthless when three people share one key.
 - **Name keys for their job.** "dm-responder-laptop" tells you what breaks when you revoke it. "test" does not.
 - **Rotate on a schedule and on every departure.** Create the replacement, update the client, confirm it works, then delete the old key. Deleting first gives you a broken assistant and a rushed fix.
-- **Revocation is immediate.** Deleting a key at [app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) stops the next request. The proxy caches nothing that survives it; a running client fails on its next call with an authentication error.
+- **Revocation is immediate.** Deleting a key at [app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) stops the next request. The proxy caches nothing that survives it; a running client fails on its next call with an authentication error.
 - **If a key leaks, delete it first and investigate second.** Then check that key's last-used timestamp, look at what its scopes allowed, and read the outbound history for the surfaces it could reach: sent DMs appear in their threads as `outbound` messages, and created or scheduled posts appear in the post list. A leaked `social:read` key is a disclosure problem. A leaked `social:write` key is a disclosure problem plus everything it may have sent.
 
 A project-level `.mcp.json` (Claude Code) or `.cursor/mcp.json` (Cursor) is checked into the repository by design: that is the point of a project file, so the whole team gets the same server without each person configuring it. Which is exactly why the key must never be written into it literally. Reference an environment variable using your client's expansion syntax (Claude Code expands `${CRMSOLID_API_KEY}` in `.mcp.json`), and keep the actual value in your shell profile or your OS keychain:
@@ -164,7 +164,7 @@ The proxy is a transport. It keeps no local database and writes no transcript of
 
 Three trails, in the order you will want them.
 
-1. **Per-key attribution.** Every key in [app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) shows its scopes and when it was last used. One key per client makes that timestamp meaningful: if the scheduler key was last used at a time nobody was scheduling, that is your signal.
+1. **Per-key attribution.** Every key in [app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) shows its scopes and when it was last used. One key per client makes that timestamp meaningful: if the scheduler key was last used at a time nobody was scheduling, that is your signal.
 2. **The record of the write itself.** Writes are visible where they landed and are not hidden because a machine made them. A DM the assistant sent appears in its conversation as an `outbound` message with its timestamp, and on the contact timeline as a message activity, because a send through these tools is recorded as an operator takeover. A post it created appears in the post list with its status and `createdAt`. A cancelled post keeps `status: "cancelled"` rather than disappearing, so the history stays complete.
 3. **The CRM activity trail.** Contact-level changes (notes, tags, stage moves, lead score) are recorded on the contact timeline, which an assistant can read back with `crm_get_contact_activity`. That gives you a chronological view of what changed on a record without leaving the panel.
 

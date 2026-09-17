@@ -38,7 +38,7 @@ The `${CRMSOLID_API_KEY}` indirection is the whole point. **Never put a literal 
 Two habits that go with this:
 
 - Document the required variable in your repo README next to the build instructions, so a new joiner knows what to export.
-- If a key does reach a commit, rotate it at [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) rather than rewriting history and hoping. Revoking is instant, and one key per machine means revoking one breaks one setup.
+- If a key does reach a commit, rotate it at [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) rather than rewriting history and hoping. Revoking is instant, and one key per machine means revoking one breaks one setup.
 
 ## Narrow the tool surface per project
 

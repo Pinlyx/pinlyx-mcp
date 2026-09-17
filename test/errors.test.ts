@@ -40,7 +40,7 @@ describe('scope errors', () => {
     expect(scopeError.grantedScopes).toEqual(['social:read', 'posts:read']);
     expect(scopeError.message).toContain("needs the 'social:write' scope");
     expect(scopeError.message).toContain('social:read, posts:read');
-    expect(scopeError.message).toContain('https://app.crmsolid.com/settings/developers');
+    expect(scopeError.message).toContain('https://app.pinlyx.com/settings/developers');
     // Not a JSON-RPC dump.
     expect(scopeError.message).not.toContain('-32002');
     expect(scopeError.message).not.toContain('jsonrpc');
@@ -146,7 +146,7 @@ describe('plan errors', () => {
     expect(error).toBeInstanceOf(PlanError);
     expect((error as PlanError).featureKey).toBe('dev_mcp_server');
     expect(error.message).toContain("plan does not include this (feature 'dev_mcp_server')");
-    expect(error.message).toContain('https://app.crmsolid.com/billing');
+    expect(error.message).toContain('https://app.pinlyx.com/billing');
   });
 
   it('still explains itself when the body has no feature key', async () => {

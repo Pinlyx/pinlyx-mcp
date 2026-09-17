@@ -375,7 +375,7 @@ export async function httpErrorFor(response: Response): Promise<Error> {
   if (response.status === 401) {
     return new AuthenticationError(
       `Pinlyx rejected the API key (HTTP 401). The key is missing, malformed, revoked or expired. ` +
-        `Check CRMSOLID_API_KEY (or --api-key), and mint a replacement at https://app.crmsolid.com/settings/developers if needed.`,
+        `Check CRMSOLID_API_KEY (or --api-key), and mint a replacement at https://app.pinlyx.com/settings/developers if needed.`,
     );
   }
 
@@ -390,7 +390,7 @@ export async function httpErrorFor(response: Response): Promise<Error> {
   if (response.status === 403) {
     return new AccessError(
       `Pinlyx refused this API key (HTTP 403). The usual cause is the key's IP allow list: ` +
-        `this machine's address is not on it. Review the key at https://app.crmsolid.com/settings/developers.`,
+        `this machine's address is not on it. Review the key at https://app.pinlyx.com/settings/developers.`,
     );
   }
 

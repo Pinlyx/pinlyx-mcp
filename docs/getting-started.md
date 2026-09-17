@@ -20,7 +20,7 @@ Two consequences matter on day one. No platform password, session cookie or OAut
 | Requirement | How to check |
 |---|---|
 | Node.js 20 or newer | `node --version`. The package is ESM and declares `"node": ">=20"`. |
-| A Pinlyx account | Sign in at `https://app.crmsolid.com`. Plan availability is on the [pricing page](https://pinlyx.com/pricing). |
+| A Pinlyx account | Sign in at `https://app.pinlyx.com`. Plan availability is on the [pricing page](https://pinlyx.com/pricing). |
 | At least one connected social account | Connect Instagram, WhatsApp, LinkedIn or any of the other 9 platforms in the app first. |
 | An MCP capable client | Claude Desktop, Claude Code, Cursor, VS Code agent mode, Windsurf, Zed and others. |
 
@@ -28,7 +28,7 @@ Connect at least one social account before you start. With zero connected accoun
 
 ## Create an API key and choose scopes
 
-1. Open [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers).
+1. Open [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers).
 2. Create a key and name it after the machine and client that will hold it, for example `laptop-claude-desktop`. One key per client, so you can revoke one without breaking the rest.
 3. Pick scopes. The four social scopes are enabled by default on a new key.
 4. Copy the key. It starts with `csk_live_` and is shown once.

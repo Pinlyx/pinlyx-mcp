@@ -11,7 +11,7 @@ MCP tool output is camelCase (`scheduledAt`). The public v1 REST API is PascalCa
 | Requirement | Where |
 |---|---|
 | Server installed in your client | [./getting-started.md](./getting-started.md) |
-| API key with `posts:read` and `posts:write` | [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) |
+| API key with `posts:read` and `posts:write` | [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) |
 | Social accounts connected in the panel | Pinlyx panel, Social settings |
 | Recipes 5 and 6 also need `social:read` and `analytics:read` | [./security-and-scopes.md](./security-and-scopes.md) |
 

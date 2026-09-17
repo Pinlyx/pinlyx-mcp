@@ -58,7 +58,7 @@ Cursor can be configured to auto-run tools without asking. If you turn that on, 
 1. **Keep the key out of the repo entirely.** Put the literal key in the global `~/.cursor/mcp.json`, which lives outside every project, and commit nothing.
 2. **Commit the file with indirection.** Use `"CRMSOLID_API_KEY": "${CRMSOLID_API_KEY}"` and have each person export the variable in their shell profile. Environment variable expansion in Cursor's MCP config depends on the version you are running, so verify it resolves before you rely on it: if the server starts and tools appear, expansion worked, and if it fails with a missing key error, your version does not expand and you should fall back to option 1.
 
-Either way, add `.cursor/mcp.json` to `.gitignore` if there is any chance a literal key ends up in it. If a key does get committed, revoke it at [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers) instead of rewriting history. One key per machine means revoking one breaks one setup. More on this in [security and scopes](./security-and-scopes.md).
+Either way, add `.cursor/mcp.json` to `.gitignore` if there is any chance a literal key ends up in it. If a key does get committed, revoke it at [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) instead of rewriting history. One key per machine means revoking one breaks one setup. More on this in [security and scopes](./security-and-scopes.md).
 
 ## Worked example: turn a support DM into a task and a contact note
 

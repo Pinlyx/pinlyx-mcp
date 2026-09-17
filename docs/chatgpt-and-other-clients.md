@@ -52,7 +52,7 @@ A working key returns the tool list, truncated here:
 
 How to read the outcome:
 
-- HTTP 401: the key is wrong, revoked, or truncated on paste. Reissue at [https://app.crmsolid.com/settings/developers](https://app.crmsolid.com/settings/developers).
+- HTTP 401: the key is wrong, revoked, or truncated on paste. Reissue at [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers).
 - A tool list that is missing the social tools: the key lacks `social:read` or `posts:read`. Fix the scopes, not the client.
 - A full list: your key and the endpoint are fine, and any remaining problem is client side. Go to [troubleshooting](./troubleshooting.md).
 
