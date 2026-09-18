@@ -52,6 +52,9 @@ const GROUP_RULES: ReadonlyArray<{ group: string; pattern: RegExp }> = [
   { group: 'pipelines', pattern: /_pipelines?(_|$)/ },
   { group: 'webhooks', pattern: /_webhooks?(_|$)/ },
   { group: 'jobs', pattern: /_jobs?(_|$)/ },
+  // Ads before analytics: crm_google_ads_summary ends in _summary but belongs to ads,
+  // and an ad draft is part of the same surface (ads:read / ads:write upstream).
+  { group: 'ads', pattern: /_ads(_|$)|_ad_drafts?(_|$)/ },
   { group: 'agents', pattern: /_agents?(_|$)/ },
   { group: 'accounts', pattern: /_accounts?(_|$)/ },
   { group: 'telegram', pattern: /_telegram(_|$)/ },
