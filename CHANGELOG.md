@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `ads` group for `--tools` / `CRMSOLID_TOOLS`, covering the Google Ads tools
+  (`crm_google_ads_*`, `crm_list_google_ads_accounts`, ad drafts). It is matched before
+  `analytics` so `crm_google_ads_summary` lands in the right group.
+
+### Changed
+
+- Documentation reflects the hosted server as it stands: 76 tools (44 read-only, 32 write),
+  21 resources and 15 prompts. The email family now includes mailbox connection
+  (`crm_list_email_accounts`, `crm_add_email_account`, `crm_test_email_account`), and the
+  Google Ads family is listed. Nothing in the bridge changed for these; the tool list comes
+  from the server at runtime.
+
 ## [0.1.4] - 2026-09-16
 
 ### Changed

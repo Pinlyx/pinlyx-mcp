@@ -97,9 +97,12 @@ windows and policies still apply.
 ## Tool reference
 
 Thirteen social tools ship in this release: seven for the DM inbox, six for posts. They sit
-alongside 49 CRM tools (contacts, deals, tasks, email, finance, analytics, sequences,
-pipelines, jobs, webhooks, agents) on the same server, which is the point: a DM that never
-becomes a contact record is a DM you will lose.
+alongside 63 CRM tools (contacts, deals, tasks, email threads and mailboxes, finance,
+analytics, sequences, pipelines, jobs, webhooks, agents, Google Ads) on the same server,
+76 tools in all, which is the point: a DM that never becomes a contact record is a DM you
+will lose. The email family can also connect a mailbox: `crm_add_email_account` takes an
+address and an app password, fills in the IMAP/SMTP hosts for the common providers, and
+saves nothing unless both connections authenticate. It never returns the password.
 
 ### Social inbox
 

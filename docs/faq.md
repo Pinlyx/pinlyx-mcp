@@ -77,7 +77,7 @@ Yes, both, along with Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads,
 
 ### How many tools are there?
 
-62 tools, 21 resources and 15 prompts. The social and posts families add 13 tools, 4 resources and 3 prompts on top of the contacts, deals, tasks, email, finance, analytics, sequences, pipelines, jobs, webhooks and agents families that were already there. Every argument is documented in [./tools-reference.md](./tools-reference.md).
+76 tools, 21 resources and 15 prompts. The social and posts families add 13 tools, 4 resources and 3 prompts on top of the contacts, deals, tasks, email, finance, analytics, sequences, pipelines, jobs, webhooks, agents and Google Ads families. The email family covers mailboxes as well as threads: an assistant can list the connected mailboxes, connect a new one over IMAP/SMTP (`crm_add_email_account`, which verifies both connections before saving and never returns the password) and re-test one that stopped syncing. Every argument is documented in [./tools-reference.md](./tools-reference.md).
 
 ### Can it post without asking me?
 

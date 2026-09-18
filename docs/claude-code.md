@@ -1,6 +1,6 @@
 # Claude Code MCP Server: Manage Social DMs From the Terminal
 
-Adding Pinlyx as a Claude Code MCP server is one command, and after it you can triage an Instagram inbox, draft a launch post from your own `CHANGELOG.md`, and queue it for tomorrow morning without leaving the terminal. The server publishes 62 tools, 21 resources and 15 prompts across 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. This page covers `claude mcp add`, the project scoped `.mcp.json` you can commit, per project `--tools` narrowing, checking the connection with `/mcp`, and a release day routine end to end.
+Adding Pinlyx as a Claude Code MCP server is one command, and after it you can triage an Instagram inbox, draft a launch post from your own `CHANGELOG.md`, and queue it for tomorrow morning without leaving the terminal. The server publishes 76 tools, 21 resources and 15 prompts across 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. This page covers `claude mcp add`, the project scoped `.mcp.json` you can commit, per project `--tools` narrowing, checking the connection with `/mcp`, and a release day routine end to end.
 
 You need Node.js 20 or newer and an API key starting with `csk_live_`. Create one in [getting started](./getting-started.md) if you have not.
 
@@ -65,7 +65,7 @@ Inside a session, run:
 You get the server, its status and its counts:
 
 ```text
-crmsolid   connected   tools: 62   resources: 21   prompts: 15
+crmsolid   connected   tools: 76   resources: 21   prompts: 15
 ```
 
 That is the unfiltered surface. With `--tools social,posts` in the args the count drops to those two families, and `--read-only` drops it again by removing every write tool. A lower number here is the filter working, not a broken install. From outside a session:

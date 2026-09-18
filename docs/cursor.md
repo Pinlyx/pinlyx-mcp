@@ -1,6 +1,6 @@
 # Cursor MCP Server Setup: Social Inbox Inside Your Editor
 
-Configuring Pinlyx as a Cursor MCP server means the agent chat you already use for code can also read an Instagram DM, file the follow up as a task, and write a note on the contact record. Drop a JSON block into `.cursor/mcp.json` for one project or `~/.cursor/mcp.json` for every project, enable the server in Cursor settings, and the agent gains 62 tools, 21 resources and 15 prompts across 12 platforms. This page covers both config locations, enabling the server, calling tools from agent chat, the key leak that project configs invite, and one worked example.
+Configuring Pinlyx as a Cursor MCP server means the agent chat you already use for code can also read an Instagram DM, file the follow up as a task, and write a note on the contact record. Drop a JSON block into `.cursor/mcp.json` for one project or `~/.cursor/mcp.json` for every project, enable the server in Cursor settings, and the agent gains 76 tools, 21 resources and 15 prompts across 12 platforms. This page covers both config locations, enabling the server, calling tools from agent chat, the key leak that project configs invite, and one worked example.
 
 You need Node.js 20 or newer and an API key starting with `csk_live_`. See [getting started](./getting-started.md) if you do not have one.
 

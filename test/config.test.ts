@@ -51,7 +51,7 @@ describe('argument parsing', () => {
 describe('configuration resolution', () => {
   it('requires a key and says where to get one', () => {
     expect(() => resolve([])).toThrow(/No API key/);
-    expect(() => resolve([])).toThrow(/app\.crmsolid\.com\/settings\/developers/);
+    expect(() => resolve([])).toThrow(/app\.pinlyx\.com\/settings\/developers/);
   });
 
   it('rejects something that is not a Pinlyx key', () => {

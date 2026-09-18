@@ -1,6 +1,6 @@
 # MCP CRM Integration: Connect Pinlyx to Any AI Assistant
 
-This MCP CRM integration puts your social inbox and your CRM records inside the assistant you already use. Install one npm package, paste a nine line JSON block into your client, and Claude Desktop, Claude Code, Cursor or any other Model Context Protocol client can read an Instagram DM, draft the reply, schedule a LinkedIn post for Tuesday morning, and log all of it against a contact. The server publishes 62 tools, 21 resources and 15 prompts against your Pinlyx workspace, covering 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. Budget five minutes: one API key, one config file, one restart.
+This MCP CRM integration puts your social inbox and your CRM records inside the assistant you already use. Install one npm package, paste a nine line JSON block into your client, and Claude Desktop, Claude Code, Cursor or any other Model Context Protocol client can read an Instagram DM, draft the reply, schedule a LinkedIn post for Tuesday morning, and log all of it against a contact. The server publishes 76 tools, 21 resources and 15 prompts against your Pinlyx workspace, covering 12 platforms: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp. Budget five minutes: one API key, one config file, one restart.
 
 ## How the MCP CRM integration fits together
 
@@ -81,7 +81,7 @@ Open the client's MCP panel. A healthy server reports as connected with a tool c
 
 ```text
 crmsolid: connected
-tools: 62   resources: 21   prompts: 15
+tools: 76   resources: 21   prompts: 15
 
 crm_list_social_accounts            social:read    readOnly
 crm_list_social_conversations       social:read    readOnly
@@ -98,7 +98,7 @@ crm_cancel_social_post              posts:write    idempotent
 crm_social_post_stats               posts:read     readOnly
 ```
 
-A count below 62 has three usual causes: you passed `--tools`, `--read-only` is on and every write tool was dropped, or the key is missing scopes. All three are covered in [troubleshooting](./troubleshooting.md).
+A count below 76 has three usual causes: you passed `--tools`, `--read-only` is on and every write tool was dropped, or the key is missing scopes. All three are covered in [troubleshooting](./troubleshooting.md).
 
 **3. The three line smoke test.**
 

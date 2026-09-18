@@ -1,6 +1,6 @@
 # Claude Desktop MCP Server Setup for Social Media DMs and Posts
 
-Running Pinlyx as a Claude Desktop MCP server takes one JSON file and one restart. Add the block below to `claude_desktop_config.json`, quit Claude Desktop completely, reopen it, and the app gains 62 tools, 21 resources and 15 prompts against your workspace: Instagram and WhatsApp DMs, LinkedIn and X posts, contacts, tasks and deals. This page covers the exact file paths on macOS and Windows, how to confirm the server loaded, the three prompts and four resources you get for social work, a read-only profile for a shared laptop, and the three failure modes that account for most broken setups.
+Running Pinlyx as a Claude Desktop MCP server takes one JSON file and one restart. Add the block below to `claude_desktop_config.json`, quit Claude Desktop completely, reopen it, and the app gains 76 tools, 21 resources and 15 prompts against your workspace: Instagram and WhatsApp DMs, LinkedIn and X posts, contacts, tasks and deals. This page covers the exact file paths on macOS and Windows, how to confirm the server loaded, the three prompts and four resources you get for social work, a read-only profile for a shared laptop, and the three failure modes that account for most broken setups.
 
 If you have not created an API key yet, do that first in [getting started](./getting-started.md). You need a key that starts with `csk_live_` and Node.js 20 or newer.
 
@@ -39,7 +39,7 @@ Open a new chat and look at the tools control in the composer. `crmsolid` should
 
 ```text
 crmsolid: connected
-tools: 62   resources: 21   prompts: 15
+tools: 76   resources: 21   prompts: 15
 ```
 
 Then run the smoke test. Type `List my connected social accounts`, approve the call, and you should get one row per connected account. If the server is listed but every call fails, the key is wrong or revoked. If the server is not listed at all, the config file did not parse, which the failure modes table below covers.
@@ -107,7 +107,7 @@ More cases, including proxy and corporate network problems, are in [troubleshoot
 
 ## Next steps
 
-- [Tools reference](./tools-reference.md): arguments and return shapes for all 62 tools.
+- [Tools reference](./tools-reference.md): arguments and return shapes for all 76 tools.
 - [Social inbox recipes](./social-inbox-recipes.md): triage and reply workflows that keep a human in the loop.
 - [Content scheduling recipes](./content-scheduling-recipes.md): scheduling, time zones and the `publishNow` rule.
 - [Claude Code](./claude-code.md) and [Cursor](./cursor.md) if you also work in a terminal or an editor.

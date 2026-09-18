@@ -58,6 +58,11 @@ describe('tool group inference', () => {
       crm_update_deal_stage: 'deals',
       crm_complete_task: 'tasks',
       crm_search_email_threads: 'email',
+      // Mailbox connection tools name an account, and the email rule must still win
+      // over the accounts rule or --tools email would hide them.
+      crm_list_email_accounts: 'email',
+      crm_add_email_account: 'email',
+      crm_test_email_account: 'email',
       crm_finance_summary: 'finance',
       crm_list_invoices: 'finance',
       crm_revenue_sources_summary: 'finance',
@@ -71,6 +76,13 @@ describe('tool group inference', () => {
       crm_send_twitter_dm: 'twitter',
       crm_dashboard_summary: 'analytics',
       crm_messaging_stats: 'analytics',
+      // Google Ads: the summary ends in _summary, so ads must be matched before analytics.
+      crm_google_ads_summary: 'ads',
+      crm_google_ads_campaigns: 'ads',
+      crm_list_google_ads_accounts: 'ads',
+      crm_update_google_ads_budget: 'ads',
+      crm_list_ad_drafts: 'ads',
+      crm_publish_ad_draft: 'ads',
     };
 
     for (const [name, group] of Object.entries(expected)) {

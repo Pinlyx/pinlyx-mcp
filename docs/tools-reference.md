@@ -1,6 +1,6 @@
 # MCP Tools for Social Media: Complete Pinlyx Tool Reference
 
-The Pinlyx MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside the 49 CRM tools that already shipped, so a single connection gives an assistant contacts, deals, tasks, email, finance, analytics and the whole social surface. Run the server locally over stdio with `npx -y @crmsolid/mcp-server`, or point a remote client at the hosted endpoint `POST https://api.crmsolid.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
+The Pinlyx MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside 63 CRM tools (76 in all), so a single connection gives an assistant contacts, deals, tasks, email threads and mailboxes, finance, analytics, Google Ads and the whole social surface. Run the server locally over stdio with `npx -y @crmsolid/mcp-server`, or point a remote client at the hosted endpoint `POST https://api.crmsolid.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
 
 Two casing rules, stated once: MCP tool output is camelCase, and the public v1 REST API at `https://api.crmsolid.com/v1` is PascalCase. Same data, two surfaces, never mixed inside one payload. Every example on this page is MCP output, so every key here is camelCase.
 
@@ -776,7 +776,7 @@ The same server and the same key expose the CRM. Use `--tools` (or `CRMSOLID_TOO
 | Contacts | `contacts` | Search, notes, tags, lead score, stage | `crm_search_contacts`, `crm_get_contact`, `crm_tag_contact`, `crm_set_lead_score` |
 | Deals | `deals` | Pipeline value, creation, stage moves | `crm_list_deals`, `crm_create_deal`, `crm_update_deal_stage` |
 | Tasks | `tasks` | Task list, creation, completion | `crm_list_tasks`, `crm_create_task`, `crm_complete_task` |
-| Email | `email` | Thread search, thread reads, status changes | `crm_search_email_threads`, `crm_get_email_thread`, `crm_set_email_thread_status` |
+| Email | `email` | Thread search, thread reads, status and assignment; listing, connecting and re-testing mailboxes | `crm_search_email_threads`, `crm_get_email_thread`, `crm_set_email_thread_status`, `crm_list_email_accounts`, `crm_add_email_account`, `crm_test_email_account` |
 | Finance | `finance` | Revenue summary, invoices, transactions | `crm_finance_summary`, `crm_list_invoices`, `crm_list_transactions` |
 | Analytics | `analytics` | Dashboard rollups, messaging stats, top contacts | `crm_dashboard_summary`, `crm_messaging_stats`, `crm_top_contacts` |
 | Sequences | `sequences` | Campaign status, pause and resume | `crm_list_sequences`, `crm_get_sequence_status` |
@@ -784,12 +784,15 @@ The same server and the same key expose the CRM. Use `--tools` (or `CRMSOLID_TOO
 | Jobs | `jobs` | Queued and completed background work | `crm_list_jobs`, `crm_get_job` |
 | Webhooks | `webhooks` | Subscriptions and delivery history | `crm_list_webhooks`, `crm_list_webhook_deliveries` |
 | Agents | `agents` | The AI agents configured in your workspace | `crm_list_agents`, `crm_run_agent` |
+| Google Ads | `ads` | Account and campaign reporting, status, budget and bidding changes, ad drafts | `crm_google_ads_summary`, `crm_google_ads_campaigns`, `crm_update_google_ads_budget`, `crm_publish_ad_draft` |
 
 A DM responder that has no business reading invoices is one flag away:
 
 ```bash
 npx -y @crmsolid/mcp-server --tools social
 ```
+
+None of the email tools sends mail. `crm_add_email_account` is the one tool on the server that takes a credential as an argument: pass the mailbox address and an app password (Gmail, Yahoo and iCloud reject the account password over IMAP), the server fills in the IMAP/SMTP hosts for Gmail, Outlook, Yahoo, Yandex, Zoho and iCloud, authenticates both connections, and saves the mailbox only when both succeed. The password is stored encrypted and no tool result ever contains it. `crm_test_email_account` re-authenticates a mailbox that is already on file and updates its status, which is the first thing to try when a mailbox stops syncing.
 
 Add `--read-only` to drop every write tool before the client ever sees the list. Both flags are local filters and are a guard against a confused model, not against a stolen key. The scope on the key is the real boundary, and that distinction is the subject of [security and scopes](./security-and-scopes.md).
 
