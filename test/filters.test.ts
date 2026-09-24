@@ -83,6 +83,28 @@ describe('tool group inference', () => {
       crm_update_google_ads_budget: 'ads',
       crm_list_ad_drafts: 'ads',
       crm_publish_ad_draft: 'ads',
+      // Meta and TikTok Ads share the ads group with Google Ads.
+      crm_meta_ads_summary: 'ads',
+      crm_set_meta_ads_status: 'ads',
+      crm_tiktok_ads_campaigns: 'ads',
+      crm_update_tiktok_ads_budget: 'ads',
+      // _ad_accounts and _meta_pixel do not contain a literal "_ads_", so they
+      // need their own alternatives in the ads pattern; without them these fall
+      // through to the accounts rule (ad_accounts) or match nothing (meta_pixel).
+      crm_list_meta_ad_accounts: 'ads',
+      crm_list_tiktok_ad_accounts: 'ads',
+      crm_meta_pixel_status: 'ads',
+      // Ads Studio drafts and the cross-network alerts/attribution tools are ads too.
+      crm_save_ad_draft: 'ads',
+      crm_dry_run_ad_draft: 'ads',
+      crm_ads_attribution_report: 'ads',
+      crm_ads_alerts: 'ads',
+      crm_configure_ads_alerts: 'ads',
+      // Feedback and the whoami self-check get their own groups.
+      crm_submit_feedback: 'feedback',
+      crm_list_feedback: 'feedback',
+      crm_reply_feedback: 'feedback',
+      crm_whoami: 'workspace',
     };
 
     for (const [name, group] of Object.entries(expected)) {
@@ -106,6 +128,43 @@ describe('tool group inference', () => {
     expect(unknownGroups(null)).toEqual([]);
     expect(KNOWN_GROUPS).toContain('social');
     expect(KNOWN_GROUPS).toContain('posts');
+    expect(KNOWN_GROUPS).toContain('feedback');
+    expect(KNOWN_GROUPS).toContain('workspace');
+  });
+});
+
+describe('always-allowed tools', () => {
+  // crm_whoami and the three feedback tools stay callable no matter how a
+  // session narrows itself, mirroring the upstream server's own exemption:
+  // a session can always say who it is and always report a problem, even one
+  // it hit because everything else was filtered away.
+  const whoami = tool('crm_whoami', true);
+  const submitFeedback = tool('crm_submit_feedback', false);
+  const listFeedback = tool('crm_list_feedback', true);
+  const replyFeedback = tool('crm_reply_feedback', false);
+
+  it('survive a --tools filter that names none of their groups', () => {
+    const kept = filterTools([whoami, submitFeedback, listFeedback, replyFeedback, tool('crm_create_deal', false)], {
+      groups: ['deals'],
+      readOnly: false,
+    }).map((entry) => entry.name);
+
+    expect(kept).toEqual(['crm_whoami', 'crm_submit_feedback', 'crm_list_feedback', 'crm_reply_feedback', 'crm_create_deal']);
+  });
+
+  it('survive --read-only even though two of them are writes', () => {
+    const kept = filterTools([whoami, submitFeedback, listFeedback, replyFeedback], {
+      groups: null,
+      readOnly: true,
+    }).map((entry) => entry.name);
+
+    expect(kept).toEqual(['crm_whoami', 'crm_submit_feedback', 'crm_list_feedback', 'crm_reply_feedback']);
+  });
+
+  it('are never refused by assertToolAllowed under any combination of filters', () => {
+    for (const t of [whoami, submitFeedback, listFeedback, replyFeedback]) {
+      expect(() => assertToolAllowed(t.name, t, { groups: ['deals'], readOnly: true })).not.toThrow();
+    }
   });
 });
 

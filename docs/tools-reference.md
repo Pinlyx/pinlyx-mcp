@@ -1,6 +1,6 @@
 # MCP Tools for Social Media: Complete Pinlyx Tool Reference
 
-The Pinlyx MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside 63 CRM tools (76 in all), so a single connection gives an assistant contacts, deals, tasks, email threads and mailboxes, finance, analytics, Google Ads and the whole social surface. Run the server locally over stdio with `npx -y @crmsolid/mcp-server`, or point a remote client at the hosted endpoint `POST https://api.crmsolid.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
+The Pinlyx MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside 129 CRM tools (142 in all), so a single connection gives an assistant contacts, deals, tasks, email threads and mailboxes, finance, analytics, Google Ads, Meta Ads, TikTok Ads and the whole social surface. Run the server locally over stdio with `npx -y @crmsolid/mcp-server`, or point a remote client at the hosted endpoint `POST https://api.crmsolid.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
 
 Two casing rules, stated once: MCP tool output is camelCase, and the public v1 REST API at `https://api.crmsolid.com/v1` is PascalCase. Same data, two surfaces, never mixed inside one payload. Every example on this page is MCP output, so every key here is camelCase.
 
@@ -784,7 +784,9 @@ The same server and the same key expose the CRM. Use `--tools` (or `CRMSOLID_TOO
 | Jobs | `jobs` | Queued and completed background work | `crm_list_jobs`, `crm_get_job` |
 | Webhooks | `webhooks` | Subscriptions and delivery history | `crm_list_webhooks`, `crm_list_webhook_deliveries` |
 | Agents | `agents` | The AI agents configured in your workspace | `crm_list_agents`, `crm_run_agent` |
-| Google Ads | `ads` | Account and campaign reporting, status, budget and bidding changes, ad drafts | `crm_google_ads_summary`, `crm_google_ads_campaigns`, `crm_update_google_ads_budget`, `crm_publish_ad_draft` |
+| Ads (Google, Meta, TikTok) | `ads` | Google Ads (52 tools), Meta Ads (7) and TikTok Ads (5) reporting and management, Ads Studio campaign drafts across all three networks, ad account alerts, and a cross-network ad spend/CRM attribution report | `crm_google_ads_summary`, `crm_meta_ads_summary`, `crm_tiktok_ads_summary`, `crm_publish_ad_draft`, `crm_ads_attribution_report` |
+| Feedback | `feedback` | Report a problem or idea to the Pinlyx team and read their replies. Always callable, on any key, no matter what `--tools` you pass | `crm_submit_feedback`, `crm_list_feedback`, `crm_reply_feedback` |
+| Workspace | `workspace` | Describe this connection: the workspace, the key's scopes, and every tool it cannot call. Always callable, on any key, no matter what `--tools` you pass | `crm_whoami` |
 
 A DM responder that has no business reading invoices is one flag away:
 

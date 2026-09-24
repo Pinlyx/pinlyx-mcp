@@ -40,6 +40,11 @@ export interface FilterOptions {
  * run first and win.
  */
 const GROUP_RULES: ReadonlyArray<{ group: string; pattern: RegExp }> = [
+  // Feedback and the whoami self-check first: crm_whoami and the three feedback
+  // tools are also exempted outright in toolRejection below, but they get their
+  // own groups too so --tools feedback / --tools workspace can name them directly.
+  { group: 'feedback', pattern: /_feedback(_|$)/ },
+  { group: 'workspace', pattern: /_whoami(_|$)/ },
   { group: 'posts', pattern: /_posts?(_|$)/ },
   { group: 'social', pattern: /_social(_|$)/ },
   { group: 'contacts', pattern: /_contacts?(_|$)|_tags?(_|$)|_lead_score(_|$)/ },
@@ -53,14 +58,29 @@ const GROUP_RULES: ReadonlyArray<{ group: string; pattern: RegExp }> = [
   { group: 'webhooks', pattern: /_webhooks?(_|$)/ },
   { group: 'jobs', pattern: /_jobs?(_|$)/ },
   // Ads before analytics: crm_google_ads_summary ends in _summary but belongs to ads,
-  // and an ad draft is part of the same surface (ads:read / ads:write upstream).
-  { group: 'ads', pattern: /_ads(_|$)|_ad_drafts?(_|$)/ },
+  // and an ad draft, an ad account (Meta/TikTok) or a Meta pixel is part of the same
+  // surface (ads:read / ads:write upstream), same as a Google Ads tool.
+  { group: 'ads', pattern: /_ads(_|$)|_ad_drafts?(_|$)|_ad_accounts?(_|$)|_meta_pixel(_|$)/ },
   { group: 'agents', pattern: /_agents?(_|$)/ },
   { group: 'accounts', pattern: /_accounts?(_|$)/ },
   { group: 'telegram', pattern: /_telegram(_|$)/ },
   { group: 'twitter', pattern: /_twitter(_|$)/ },
   { group: 'analytics', pattern: /_dashboard(_|$)|_stats(_|$)|_summary(_|$)/ },
 ];
+
+/**
+ * The connection self-check and the always-on channel to the Pinlyx team. The
+ * upstream server keeps these callable no matter how a connection narrows its
+ * toolsets or asks for read-only, so a session can always say who it is and
+ * always report a problem, even one it hit because everything else was
+ * filtered away. This mirrors that: --tools never hides them.
+ */
+const ALWAYS_ALLOWED_TOOLS: ReadonlySet<string> = new Set([
+  'crm_whoami',
+  'crm_submit_feedback',
+  'crm_list_feedback',
+  'crm_reply_feedback',
+]);
 
 /** Groups a `--tools` value is expected to name. Used only to spell-check the flag. */
 export const KNOWN_GROUPS: readonly string[] = GROUP_RULES.map((rule) => rule.group);
@@ -94,6 +114,8 @@ export function isReadOnlyTool(tool: Pick<ToolInfo, 'annotations'>): boolean {
 
 /** Why a tool is hidden, or `null` when it is allowed. */
 export function toolRejection(tool: ToolInfo, options: FilterOptions): string | null {
+  if (ALWAYS_ALLOWED_TOOLS.has(tool.name)) return null;
+
   if (options.readOnly && !isReadOnlyTool(tool)) {
     return 'This session was started with --read-only, which allows only tools that Pinlyx marks as read-only.';
   }

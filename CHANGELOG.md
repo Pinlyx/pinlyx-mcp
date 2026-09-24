@@ -7,19 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-24
+
 ### Added
 
-- `ads` group for `--tools` / `CRMSOLID_TOOLS`, covering the Google Ads tools
-  (`crm_google_ads_*`, `crm_list_google_ads_accounts`, ad drafts). It is matched before
-  `analytics` so `crm_google_ads_summary` lands in the right group.
+- `ads` group for `--tools` / `CRMSOLID_TOOLS`, covering every ads tool: Google Ads
+  (`crm_google_ads_*`, `crm_list_google_ads_accounts`, bids, budgets, targeting), Meta and
+  TikTok (`crm_meta_ads_*`, `crm_tiktok_ads_*`, `crm_list_meta_ad_accounts`,
+  `crm_list_tiktok_ad_accounts`, `crm_meta_pixel_status`), ad drafts, ad alerts and the
+  attribution report. It is matched before `accounts` and `analytics`, so
+  `crm_list_meta_ad_accounts` and `crm_google_ads_summary` land in the right group.
+- `feedback` and `workspace` groups for `crm_submit_feedback`, `crm_list_feedback`,
+  `crm_reply_feedback` and `crm_whoami`. These four tools stay available under any
+  `--tools` or `--read-only` setting, mirroring the hosted server: a narrowed session must
+  still be able to say who it is and report a problem.
 
 ### Changed
 
-- Documentation reflects the hosted server as it stands: 76 tools (44 read-only, 32 write),
-  21 resources and 15 prompts. The email family now includes mailbox connection
-  (`crm_list_email_accounts`, `crm_add_email_account`, `crm_test_email_account`), and the
-  Google Ads family is listed. Nothing in the bridge changed for these; the tool list comes
-  from the server at runtime.
+- Documentation reflects the hosted server as it stands: 142 tools (78 read-only, 64
+  write), 21 resources and 15 prompts. Google Ads grew from 11 to 52 tools; Meta Ads,
+  TikTok Ads, feedback and `crm_whoami` are new. Nothing in the bridge transport changed;
+  the tool list comes from the server at runtime.
 
 ## [0.1.4] - 2026-09-16
 
