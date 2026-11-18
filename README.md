@@ -313,7 +313,7 @@ Vendor neutral tutorials, including ones that do not involve Pinlyx at all:
 
 ## Related packages
 
-- [`@crmsolid/node`](https://github.com/Pinlyx/crmsolid-node): the REST client, for code
+- [`Pinlyx` for .NET](https://github.com/Pinlyx/pinlyx-dotnet): the REST client, for code
   that is not an AI assistant.
 - [Pinlyx Clipper](https://chromewebstore.google.com/detail/crm-solid-clipper-save-le/mbdeafjdkhilgbdaoenggfamombmgpfm):
   the browser extension, for the other direction. It puts a person into the CRM from the
