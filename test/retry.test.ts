@@ -21,7 +21,7 @@ function testClient(
     maxRetries: 3,
     initialRetryDelayMs: 500,
     maxRetryDelayMs: 8_000,
-    userAgent: 'crmsolid-mcp/test',
+    userAgent: 'pinlyx-mcp/test',
     fetch: stub.fetch,
     sleep: async (ms: number) => {
       waits.ms.push(ms);

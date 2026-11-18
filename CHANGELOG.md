@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-18
+
+### Changed
+
+- Renamed to `pinlyx-mcp`. The package is no longer published as `@crmsolid/mcp-server`,
+  and the binary is `pinlyx-mcp` (it was `crmsolid-mcp`). Use `npx -y pinlyx-mcp`.
+- Environment variables are now `PINLYX_API_KEY`, `PINLYX_BASE_URL`, `PINLYX_TOOLS`,
+  `PINLYX_READ_ONLY`, `PINLYX_TIMEOUT_MS`, `PINLYX_MAX_RETRIES`, `PINLYX_SSE` and
+  `PINLYX_DEBUG`. The old `CRMSOLID_*` names are still read as a fallback, and `PINLYX_*`
+  takes priority when both are set.
+- Default API host is `https://api.pinlyx.com`.
+- The User-Agent is `pinlyx-mcp/<version>` and the MCP `serverInfo` name is `pinlyx-mcp`.
+- Help text, error messages, example configurations and documentation use the Pinlyx
+  names and links (demo.pinlyx.com, app.pinlyx.com, docs.pinlyx.com).
+
 ## [0.2.0] - 2026-09-24
 
 ### Added

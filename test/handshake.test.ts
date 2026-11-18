@@ -31,7 +31,7 @@ describe('handshake', () => {
     expect(session.upstream.callCount).toBe(0);
 
     const info = session.client.getServerVersion();
-    expect(info).toMatchObject({ name: 'crmsolid', version: VERSION });
+    expect(info).toMatchObject({ name: 'pinlyx-mcp', version: VERSION });
     expect(session.client.getServerCapabilities()).toMatchObject({
       tools: { listChanged: true },
       resources: { listChanged: true, subscribe: false },
@@ -60,14 +60,14 @@ describe('handshake', () => {
     expect(handshake.method).toBe('POST');
     expect(handshake.url).toBe('https://api.example.test/mcp');
     expect(handshake.headers['authorization']).toBe(`Bearer ${TEST_KEY}`);
-    expect(handshake.headers['user-agent']).toContain('crmsolid-mcp/');
+    expect(handshake.headers['user-agent']).toContain('pinlyx-mcp/');
     expect(handshake.body).toMatchObject({
       jsonrpc: '2.0',
       method: 'initialize',
       params: { protocolVersion: PROTOCOL_VERSION },
     });
     // The bridge identifies itself, not the client it is bridging for.
-    expect(handshake.body?.['params']).toMatchObject({ clientInfo: { name: 'crmsolid-mcp-bridge' } });
+    expect(handshake.body?.['params']).toMatchObject({ clientInfo: { name: 'pinlyx-mcp-bridge' } });
 
     // The session id is minted on the initialize response header and echoed on
     // everything after it.

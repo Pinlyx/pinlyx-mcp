@@ -20,10 +20,10 @@ A minimal configuration, which every recipe below assumes:
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -304,10 +304,10 @@ Assume it will try, eventually. Four layers stop it, and you should have at leas
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid-readonly": {
+    "pinlyx-readonly": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--read-only", "--tools", "social,posts"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--read-only", "--tools", "social,posts"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }

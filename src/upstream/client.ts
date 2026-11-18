@@ -29,7 +29,7 @@ export const SESSION_HEADER = 'Mcp-Session-Id';
 export const PROTOCOL_VERSION = '2025-06-18';
 
 export interface UpstreamClientOptions {
-  /** Absolute URL of the remote MCP endpoint, e.g. `https://api.crmsolid.com/mcp`. */
+  /** Absolute URL of the remote MCP endpoint, e.g. `https://api.pinlyx.com/mcp`. */
   url: string;
   /** Bearer key. Never logged: it is registered with the redactor at startup. */
   apiKey: string;
@@ -155,7 +155,7 @@ export class UpstreamClient {
 
   /** Sends one JSON-RPC request and returns its `result` member. */
   async send<T>(method: string, params: unknown, options: SendOptions): Promise<T> {
-    const id = `crmsolid-${(this.nextId++).toString(36)}-${Date.now().toString(36)}`;
+    const id = `pinlyx-${(this.nextId++).toString(36)}-${Date.now().toString(36)}`;
     const payload = JSON.stringify({ jsonrpc: '2.0', id, method, params });
     const response = await this.dispatch(method, payload, options);
 
@@ -323,7 +323,7 @@ export class UpstreamClient {
 class TimeoutSignal extends Error {
   constructor() {
     super('timeout');
-    this.name = 'CrmSolidTimeout';
+    this.name = 'PinlyxTimeout';
   }
 }
 
@@ -351,7 +351,7 @@ export function rpcErrorFor(error: { code: number; message: string; data?: unkno
   if (error.code === RpcErrorCode.Unauthorized) {
     return new AuthenticationError(
       `Pinlyx did not accept the API key: ${error.message}. ` +
-        `Check CRMSOLID_API_KEY (or --api-key) and confirm the key is still active.`,
+        `Check PINLYX_API_KEY (or --api-key) and confirm the key is still active.`,
     );
   }
 
@@ -375,7 +375,7 @@ export async function httpErrorFor(response: Response): Promise<Error> {
   if (response.status === 401) {
     return new AuthenticationError(
       `Pinlyx rejected the API key (HTTP 401). The key is missing, malformed, revoked or expired. ` +
-        `Check CRMSOLID_API_KEY (or --api-key), and mint a replacement at https://app.pinlyx.com/settings/developers if needed.`,
+        `Check PINLYX_API_KEY (or --api-key), and mint a replacement at https://app.pinlyx.com/settings/developers if needed.`,
     );
   }
 
@@ -407,8 +407,8 @@ export async function httpErrorFor(response: Response): Promise<Error> {
       status: 404,
       statusText: 'Not Found',
       body:
-        `The MCP endpoint was not found at this base URL. Check CRMSOLID_BASE_URL (or --base-url): ` +
-        `it must be the API host, for example https://api.crmsolid.com, with no /mcp suffix.`,
+        `The MCP endpoint was not found at this base URL. Check PINLYX_BASE_URL (or --base-url): ` +
+        `it must be the API host, for example https://api.pinlyx.com, with no /mcp suffix.`,
     });
   }
 
@@ -426,7 +426,7 @@ export function connectionErrorFor(error: unknown, url: string, timeoutMs: numbe
   const detail = error instanceof Error ? error.message : String(error);
   return new UpstreamConnectionError(
     `Could not reach Pinlyx at ${url}: ${detail}. ` +
-      `Check this machine's internet connection, any corporate proxy or firewall, and that CRMSOLID_BASE_URL is right.`,
+      `Check this machine's internet connection, any corporate proxy or firewall, and that PINLYX_BASE_URL is right.`,
     { cause: error },
   );
 }
@@ -470,9 +470,9 @@ function isAbort(error: unknown): boolean {
 function isTimeout(error: unknown): boolean {
   if (error instanceof TimeoutSignal) return true;
   if (!(error instanceof Error)) return false;
-  if (error.name === 'CrmSolidTimeout' || error.name === 'TimeoutError') return true;
+  if (error.name === 'PinlyxTimeout' || error.name === 'TimeoutError') return true;
   const cause: unknown = (error as Error & { cause?: unknown }).cause;
-  return cause instanceof TimeoutSignal || (cause instanceof Error && cause.name === 'CrmSolidTimeout');
+  return cause instanceof TimeoutSignal || (cause instanceof Error && cause.name === 'PinlyxTimeout');
 }
 
 function parseJson(text: string): unknown {

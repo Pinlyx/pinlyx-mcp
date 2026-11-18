@@ -8,13 +8,13 @@
 
 # MCP Server for Social Media: Manage Every DM and Post From Your AI Assistant
 
-[![npm version](https://img.shields.io/npm/v/@crmsolid/mcp-server.svg)](https://www.npmjs.com/package/@crmsolid/mcp-server)
+[![npm version](https://img.shields.io/npm/v/pinlyx-mcp.svg)](https://www.npmjs.com/package/pinlyx-mcp)
 [![CI](https://github.com/Pinlyx/pinlyx-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/Pinlyx/pinlyx-mcp/actions/workflows/ci.yml)
-[![node](https://img.shields.io/node/v/@crmsolid/mcp-server.svg)](https://nodejs.org)
-[![license](https://img.shields.io/npm/l/@crmsolid/mcp-server.svg)](https://github.com/Pinlyx/pinlyx-mcp/blob/main/LICENSE)
+[![node](https://img.shields.io/node/v/pinlyx-mcp.svg)](https://nodejs.org)
+[![license](https://img.shields.io/npm/l/pinlyx-mcp.svg)](https://github.com/Pinlyx/pinlyx-mcp/blob/main/LICENSE)
 [![AllMCPs Verified](https://allmcps.com/api/badge/crm-solid-mcp)](https://allmcps.com/mcp/crm-solid-mcp?verify=54797484-c0d8-4869-a83d-ece9d69456f8)
 
-`@crmsolid/mcp-server` is an MCP server for social media. It gives Claude Desktop, Claude
+`pinlyx-mcp` is an MCP server for social media. It gives Claude Desktop, Claude
 Code, Cursor, ChatGPT and any other Model Context Protocol client typed access to your
 social DM inbox and your posting calendar across 12 platforms, so you can triage messages,
 draft replies, schedule posts and pull stats without opening a single dashboard.
@@ -27,10 +27,10 @@ accounts. Nothing to install: `npx` fetches the package on first run.
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -43,12 +43,27 @@ Config file locations per client:
 |---|---|
 | Claude Desktop (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` |
 | Claude Desktop (Windows) | `%APPDATA%\Claude\claude_desktop_config.json` |
-| Claude Code | `claude mcp add crmsolid --env CRMSOLID_API_KEY=csk_live_... -- npx -y @crmsolid/mcp-server` |
+| Claude Code | `claude mcp add pinlyx --env PINLYX_API_KEY=csk_live_... -- npx -y pinlyx-mcp` |
 | Cursor | `.cursor/mcp.json` in the project, or `~/.cursor/mcp.json` globally |
 | Everything else | see [docs/chatgpt-and-other-clients.md](./docs/chatgpt-and-other-clients.md) |
 
 Then say, in the client: `List my connected social accounts.` If you get a table back, you
 are done. If you do not, jump to [Troubleshooting](#troubleshooting-a-connection-that-will-not-start).
+
+## Moving from @crmsolid/mcp-server
+
+This package was published as `@crmsolid/mcp-server` up to 0.2.0 and is now `pinlyx-mcp`.
+Nothing about the tools changed. To switch, edit your client configuration:
+
+1. Replace `@crmsolid/mcp-server` with `pinlyx-mcp` in the `args` (`npx -y pinlyx-mcp`).
+2. Rename the environment variables to `PINLYX_API_KEY`, `PINLYX_BASE_URL`, `PINLYX_TOOLS`
+   and `PINLYX_READ_ONLY` (and `PINLYX_TIMEOUT_MS`, `PINLYX_MAX_RETRIES`, `PINLYX_SSE`,
+   `PINLYX_DEBUG` if you set them). The old `CRMSOLID_*` names are still read as a
+   fallback, and `PINLYX_*` wins when both are set, so you can migrate one line at a time.
+3. The default API host is now `https://api.pinlyx.com`. Your existing `csk_live_...` keys
+   keep working. If you pinned the old host in `PINLYX_BASE_URL`, you can drop it.
+4. The binary is `pinlyx-mcp` (the old `crmsolid-mcp` name is gone). Existing keys,
+   scopes and the tool list are unchanged.
 
 ## What you can ask for once it is connected
 
@@ -85,7 +100,7 @@ post your assistant queues shows up in the calendar with everything else.
 </picture>
 
 Both screens come from the live demo at
-[demo.crmsolid.com](https://demo.crmsolid.com), which is read only and needs no account.
+[demo.pinlyx.com](https://demo.pinlyx.com), which is read only and needs no account.
 
 ## Supported platforms
 
@@ -122,8 +137,8 @@ saves nothing unless both connections authenticate. It never returns the passwor
 |---|---|---|---|
 | `crm_list_social_posts` | `posts:read` | read | Filters by `status`, `platform`, `fromDate`, `toDate` |
 | `crm_get_social_post` | `posts:read` | read | One post with its media, target account and outcome |
-| `crm_schedule_social_post` | `posts:write` | write | Queues a post per target account, **never publishes by accident** |
-| `crm_update_social_post` | `posts:write` | write | Edits content, time or media while the post is still pending |
+| `crm_schedule_social_post` | `posts:write` | write | Queues a post per target account, **never publishes by accident**; optional `youtube` / `instagram` options set Shorts titles, tags and Reel covers |
+| `crm_update_social_post` | `posts:write` | write | Edits content, time, media or YouTube / Instagram options while the post is still pending |
 | `crm_cancel_social_post` | `posts:write` | write | Cancels a post that has not gone out |
 | `crm_social_post_stats` | `posts:read` | read | Publishing outcomes per platform over `days` |
 
@@ -160,22 +175,24 @@ Attach these when you want the model to read state without spending a tool call.
 
 | Env | Flag | Default | Notes |
 |---|---|---|---|
-| `CRMSOLID_API_KEY` | `--api-key` | required | Bearer key, `csk_live_...` |
-| `CRMSOLID_BASE_URL` | `--base-url` | `https://api.crmsolid.com` | Point at a staging host if you have one |
-| `CRMSOLID_TOOLS` | `--tools` | all | CSV filter, for example `social,posts` |
-| `CRMSOLID_READ_ONLY` | `--read-only` | off | Drops every write tool |
+| `PINLYX_API_KEY` | `--api-key` | required | Bearer key, `csk_live_...` |
+| `PINLYX_BASE_URL` | `--base-url` | `https://api.pinlyx.com` | Point at a staging host if you have one |
+| `PINLYX_TOOLS` | `--tools` | all | CSV filter, for example `social,posts` |
+| `PINLYX_READ_ONLY` | `--read-only` | off | Drops every write tool |
 | | `--version`, `--help` | | Prints and exits |
 
-A flag beats the matching environment variable. Two useful profiles:
+A flag beats the matching environment variable. `PINLYX_TIMEOUT_MS`, `PINLYX_MAX_RETRIES`,
+`PINLYX_SSE=0` and `PINLYX_DEBUG=1` mirror `--timeout`, `--max-retries`, `--no-sse` and
+`--debug`. Two useful profiles:
 
 ```jsonc
 // Content scheduling only, on a machine that must never touch the inbox.
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "posts"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "posts"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -185,16 +202,16 @@ A flag beats the matching environment variable. Two useful profiles:
 // Read only, for a shared laptop or a demo.
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--read-only"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--read-only"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
 ```
 
-Requires Node 20 or newer. The package is ESM, ships a `crmsolid-mcp` binary, and speaks
+Requires Node 20 or newer. The package is ESM, ships a `pinlyx-mcp` binary, and speaks
 MCP over stdio.
 
 ## How the MCP server for social media works
@@ -202,9 +219,9 @@ MCP over stdio.
 ```text
 MCP client (Claude Desktop, Claude Code, Cursor, ChatGPT, ...)
         |  stdio, JSON-RPC
-   crmsolid-mcp   (this package: filters, then forwards)
+   pinlyx-mcp   (this package: filters, then forwards)
         |  HTTPS, Authorization: Bearer csk_live_...
-   POST https://api.crmsolid.com/mcp
+   POST https://api.pinlyx.com/mcp
         |
    your connected Instagram / LinkedIn / X / WhatsApp / ... accounts
 ```
@@ -219,7 +236,7 @@ own: the Instagram token, the LinkedIn token and the rest live server side, so n
 model reads or writes can leak them onto the local machine.
 
 Remote clients that want a URL instead of a subprocess can call
-`https://api.crmsolid.com/mcp` directly with a bearer header. See
+`https://api.pinlyx.com/mcp` directly with a bearer header. See
 [docs/chatgpt-and-other-clients.md](./docs/chatgpt-and-other-clients.md).
 
 ## Security model
@@ -267,9 +284,9 @@ client's MCP log: [docs/troubleshooting.md](./docs/troubleshooting.md).
 Quick self test, no client involved:
 
 ```bash
-npx -y @crmsolid/mcp-server --version
-curl -s https://api.crmsolid.com/mcp \
-  -H "Authorization: Bearer $CRMSOLID_API_KEY" \
+npx -y pinlyx-mcp --version
+curl -s https://api.pinlyx.com/mcp \
+  -H "Authorization: Bearer $PINLYX_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 ```
@@ -302,7 +319,7 @@ Vendor neutral tutorials, including ones that do not involve Pinlyx at all:
   the browser extension, for the other direction. It puts a person into the CRM from the
   page you are reading, which is where most contacts come from before any of this runs.
   Source: [Pinlyx/pinlyx-clipper](https://github.com/Pinlyx/pinlyx-clipper).
-- [`n8n-nodes-crmsolid`](https://github.com/Pinlyx/n8n-nodes-pinlyx): the n8n
+- [`n8n-nodes-pinlyx`](https://github.com/Pinlyx/n8n-nodes-pinlyx): the n8n
   community node, for the workflows an assistant is not in. Same API, same keys, so a
   contact your assistant files is the one an n8n branch picks up.
 - The public v1 REST API behind all of this:
@@ -312,7 +329,7 @@ Vendor neutral tutorials, including ones that do not involve Pinlyx at all:
 
 Issues and pull requests: [Pinlyx/pinlyx-mcp](https://github.com/Pinlyx/pinlyx-mcp).
 When you report a connection problem, include your client and version, the output of
-`npx -y @crmsolid/mcp-server --version`, your config with the key redacted, and the relevant
+`npx -y pinlyx-mcp --version`, your config with the key redacted, and the relevant
 lines from the client's MCP log.
 
 Licensed MIT. The Model Context Protocol specification lives at

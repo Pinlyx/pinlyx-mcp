@@ -112,7 +112,7 @@ export class UpstreamServerError extends BridgeError {
     super(
       `Pinlyx returned a server error (HTTP ${init.status})` +
         (init.detail ? `: ${init.detail}` : '.') +
-        ` This is not something your configuration can fix. Retry shortly, and check https://health.crmsolid.com if it persists.`,
+        ` This is not something your configuration can fix. Retry shortly, and if it persists, report it at https://github.com/Pinlyx/pinlyx-mcp/issues.`,
     );
     this.status = init.status;
   }

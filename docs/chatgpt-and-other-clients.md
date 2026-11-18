@@ -1,13 +1,13 @@
 # ChatGPT MCP Server and Other Clients: Connecting Pinlyx Everywhere
 
-Connecting a ChatGPT MCP server to Pinlyx works differently from connecting a desktop client, and the difference is transport. The npm package `@crmsolid/mcp-server` speaks stdio: a client on your machine spawns it as a child process and talks over stdin and stdout. ChatGPT runs in a browser and cannot spawn anything on your laptop, so it needs a URL instead. For that, point it at the hosted JSON-RPC endpoint `https://api.crmsolid.com/mcp` with an `Authorization: Bearer csk_live_...` header. Both routes reach the same server, the same 142 tools, 21 resources and 15 prompts, and the same 12 platforms. This page covers the split, ChatGPT developer mode, a raw `curl` check that proves your key works with no client at all, a generic stdio block, and a table for Windsurf, Zed, Continue, Cline, VS Code agent mode and LibreChat.
+Connecting a ChatGPT MCP server to Pinlyx works differently from connecting a desktop client, and the difference is transport. The npm package `pinlyx-mcp` speaks stdio: a client on your machine spawns it as a child process and talks over stdin and stdout. ChatGPT runs in a browser and cannot spawn anything on your laptop, so it needs a URL instead. For that, point it at the hosted JSON-RPC endpoint `https://api.pinlyx.com/mcp` with an `Authorization: Bearer csk_live_...` header. Both routes reach the same server, the same 142 tools, 21 resources and 15 prompts, and the same 12 platforms. This page covers the split, ChatGPT developer mode, a raw `curl` check that proves your key works with no client at all, a generic stdio block, and a table for Windsurf, Zed, Continue, Cline, VS Code agent mode and LibreChat.
 
 ## Two transports, one server
 
 | | Local stdio | Hosted URL |
 |---|---|---|
-| What you configure | `npx -y @crmsolid/mcp-server` | `https://api.crmsolid.com/mcp` |
-| Auth | `CRMSOLID_API_KEY` in the process env | `Authorization: Bearer csk_live_...` header |
+| What you configure | `npx -y pinlyx-mcp` | `https://api.pinlyx.com/mcp` |
+| Auth | `PINLYX_API_KEY` in the process env | `Authorization: Bearer csk_live_...` header |
 | Who uses it | Claude Desktop, Claude Code, Cursor, Windsurf, Zed, Continue, Cline, VS Code | ChatGPT connectors, hosted agent platforms, anything without a local process |
 | `--tools` and `--read-only` | available | not available, those flags live in the local proxy |
 
@@ -19,7 +19,7 @@ That exception matters. On a remote client you cannot pass `--read-only`, so the
 
 ChatGPT reaches MCP servers through custom connectors, which are exposed under developer mode in settings. The rough shape is: open settings, find Connectors, enable developer mode, add a connector, and give it the server URL plus the authentication header.
 
-Enter `https://api.crmsolid.com/mcp` as the server URL and supply your key as a bearer token in the `Authorization` header. After the connector saves, ChatGPT fetches the tool list, and that list is your confirmation the key and scopes are right.
+Enter `https://api.pinlyx.com/mcp` as the server URL and supply your key as a bearer token in the `Authorization` header. After the connector saves, ChatGPT fetches the tool list, and that list is your confirmation the key and scopes are right.
 
 Two honest caveats. Custom connector availability depends on your ChatGPT plan and on OpenAI's rollout, so the option may not be present in your account. And what a connector is permitted to call varies by ChatGPT surface: some modes expose a narrow subset of a server's tools rather than everything it publishes. Check OpenAI's own connector documentation for the current state before assuming a tool you can see in `curl` will be callable in chat. If the connector UI shows a tool list, trust that list over anything written here.
 
@@ -28,7 +28,7 @@ Two honest caveats. Custom connector availability depends on your ChatGPT plan a
 Run this first when a client will not connect. It removes the client from the equation entirely.
 
 ```bash
-curl -sS https://api.crmsolid.com/mcp \
+curl -sS https://api.pinlyx.com/mcp \
   -H "Authorization: Bearer csk_live_..." \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
@@ -59,7 +59,7 @@ How to read the outcome:
 Call a tool the same way:
 
 ```bash
-curl -sS https://api.crmsolid.com/mcp \
+curl -sS https://api.pinlyx.com/mcp \
   -H "Authorization: Bearer csk_live_..." \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"crm_social_inbox_summary","arguments":{}}}'
@@ -86,7 +86,7 @@ The payload comes back in camelCase:
 }
 ```
 
-MCP output is camelCase and ids are integers. The public v1 REST API at `https://api.crmsolid.com/v1` is PascalCase and pages with a cursor, while the MCP list tools take `limit` and return a `count`. Do not mix the two in one script.
+MCP output is camelCase and ids are integers. The public v1 REST API at `https://api.pinlyx.com/v1` is PascalCase and pages with a cursor, while the MCP list tools take `limit` and return a `count`. Do not mix the two in one script.
 
 ## A generic stdio block for local clients
 
@@ -95,10 +95,10 @@ Most desktop and editor clients take this block, or something one rename away fr
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social,posts"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social,posts"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }

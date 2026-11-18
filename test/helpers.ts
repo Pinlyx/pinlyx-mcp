@@ -57,7 +57,7 @@ export interface StubUpstream {
 }
 
 /**
- * A `fetch` standing in for `POST https://api.crmsolid.com/mcp`.
+ * A `fetch` standing in for `POST https://api.pinlyx.com/mcp`.
  *
  * Routing is by JSON-RPC method rather than by call order, because the bridge
  * legitimately sends calls a test did not ask for (the handshake, the
@@ -196,7 +196,7 @@ export const INITIALIZE_RESULT = {
     logging: {},
     experimental: {},
   },
-  serverInfo: { name: 'crmsolid', title: 'Pinlyx', version: '1.0.0' },
+  serverInfo: { name: 'pinlyx', title: 'Pinlyx', version: '1.0.0' },
 };
 
 /** Scripts an `initialize` reply carrying a session id, as the backend does. */

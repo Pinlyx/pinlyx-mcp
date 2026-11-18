@@ -4,12 +4,12 @@ This MCP CRM integration puts your social inbox and your CRM records inside the 
 
 ## How the MCP CRM integration fits together
 
-There are four hops. Your client launches the stdio proxy with `npx -y @crmsolid/mcp-server`. The proxy speaks MCP over stdin and stdout and forwards every `tools/list`, `tools/call`, `resources/*` and `prompts/*` call as JSON-RPC to `POST https://api.crmsolid.com/mcp`, with your bearer key in the `Authorization` header. The Pinlyx backend holds your platform connections and does the actual work: pulling the Instagram thread, sending the WhatsApp reply, queueing the LinkedIn post. Results come back down the same path.
+There are four hops. Your client launches the stdio proxy with `npx -y pinlyx-mcp`. The proxy speaks MCP over stdin and stdout and forwards every `tools/list`, `tools/call`, `resources/*` and `prompts/*` call as JSON-RPC to `POST https://api.pinlyx.com/mcp`, with your bearer key in the `Authorization` header. The Pinlyx backend holds your platform connections and does the actual work: pulling the Instagram thread, sending the WhatsApp reply, queueing the LinkedIn post. Results come back down the same path.
 
 ```text
 AI client
-  -> stdio proxy: npx -y @crmsolid/mcp-server
-  -> POST https://api.crmsolid.com/mcp   (Authorization: Bearer csk_live_...)
+  -> stdio proxy: npx -y pinlyx-mcp
+  -> POST https://api.pinlyx.com/mcp   (Authorization: Bearer csk_live_...)
   -> your connected platform accounts
 ```
 
@@ -52,16 +52,16 @@ Every client that spawns a local process takes the same block. Paste it into the
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
 ```
 
-If the file already has an `mcpServers` object, add `crmsolid` as a sibling key rather than replacing what is there. File locations and per client quirks are covered in [Claude Desktop](./claude-desktop.md), [Claude Code](./claude-code.md), [Cursor](./cursor.md), and [ChatGPT and other clients](./chatgpt-and-other-clients.md).
+If the file already has an `mcpServers` object, add `pinlyx` as a sibling key rather than replacing what is there. File locations and per client quirks are covered in [Claude Desktop](./claude-desktop.md), [Claude Code](./claude-code.md), [Cursor](./cursor.md), and [ChatGPT and other clients](./chatgpt-and-other-clients.md).
 
 ## Verify the connection
 
@@ -70,7 +70,7 @@ Run three checks, in this order, so a failure tells you which hop broke.
 **1. Can Node run the package at all?**
 
 ```bash
-npx -y @crmsolid/mcp-server --version
+npx -y pinlyx-mcp --version
 ```
 
 That prints a version and exits. If it hangs or errors, the problem is Node or the network, not your key and not your client.
@@ -80,7 +80,7 @@ That prints a version and exits. If it hangs or errors, the problem is Node or t
 Open the client's MCP panel. A healthy server reports as connected with a tool count:
 
 ```text
-crmsolid: connected
+pinlyx: connected
 tools: 142   resources: 21   prompts: 15
 
 crm_list_social_accounts            social:read    readOnly
@@ -128,7 +128,7 @@ You should get one row per connected account. Follow it with `Show me my unread 
 }
 ```
 
-MCP tool output is camelCase. The public v1 REST API at `https://api.crmsolid.com/v1` is PascalCase. Pick one per script and do not mix them. Ids are integers on both. MCP list tools take `limit` (1 to 100, default 25) and return a named array plus a `count`, and message history pages backwards with `beforeMessageId`. Cursor pagination (`after`, `nextCursor`, `hasMore`) belongs to the v1 REST API, not to these tools.
+MCP tool output is camelCase. The public v1 REST API at `https://api.pinlyx.com/v1` is PascalCase. Pick one per script and do not mix them. Ids are integers on both. MCP list tools take `limit` (1 to 100, default 25) and return a named array plus a `count`, and message history pages backwards with `beforeMessageId`. Cursor pagination (`after`, `nextCursor`, `hasMore`) belongs to the v1 REST API, not to these tools.
 
 ## Narrow the surface with --tools and --read-only
 
@@ -137,10 +137,10 @@ The full server is a lot of tools for one job. Two flags cut it down, and both r
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social,posts", "--read-only"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social,posts", "--read-only"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -148,10 +148,10 @@ The full server is a lot of tools for one job. Two flags cut it down, and both r
 
 | Env | Flag | Default |
 |---|---|---|
-| `CRMSOLID_API_KEY` | `--api-key` | required |
-| `CRMSOLID_BASE_URL` | `--base-url` | `https://api.crmsolid.com` |
-| `CRMSOLID_TOOLS` | `--tools` | all families |
-| `CRMSOLID_READ_ONLY` | `--read-only` | off |
+| `PINLYX_API_KEY` | `--api-key` | required |
+| `PINLYX_BASE_URL` | `--base-url` | `https://api.pinlyx.com` |
+| `PINLYX_TOOLS` | `--tools` | all families |
+| `PINLYX_READ_ONLY` | `--read-only` | off |
 | (none) | `--version`, `--help` | (none) |
 
 `--tools` takes a comma separated family list: `social`, `posts`, `contacts`, `deals`, `tasks`, `email`, `finance` and the rest. `--read-only` drops every write tool before the client sees the list, so `crm_send_social_message` and `crm_schedule_social_post` are not refused at call time, they are absent. Three profiles cover most setups:

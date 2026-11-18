@@ -9,7 +9,7 @@ import { registerSecret } from './core/redact.js';
 import { VERSION } from './version.js';
 
 /**
- * Entry point for the `crmsolid-mcp` binary.
+ * Entry point for the `pinlyx-mcp` binary.
  *
  * Two rules govern everything below.
  *
@@ -48,7 +48,7 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<void
     config = resolveConfig(parsed, process.env);
   } catch (error) {
     if (error instanceof ConfigError) {
-      process.stderr.write(`crmsolid-mcp: ${error.message}\n`);
+      process.stderr.write(`pinlyx-mcp: ${error.message}\n`);
       process.exitCode = EXIT_CONFIG;
       return;
     }
@@ -89,13 +89,13 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<void
   try {
     await bridge.start(transport);
   } catch (error) {
-    process.stderr.write(`crmsolid-mcp: ${describeFailure(error)}\n`);
+    process.stderr.write(`pinlyx-mcp: ${describeFailure(error)}\n`);
     process.exitCode = EXIT_RUNTIME;
     await bridge.stop();
   }
 }
 
-// tsup emits this file as the `crmsolid-mcp` bin. Running it starts the server;
+// tsup emits this file as the `pinlyx-mcp` bin. Running it starts the server;
 // importing it (the smoke test does) gets `main` without side effects.
 if (isDirectRun()) {
   void main();
@@ -111,5 +111,5 @@ if (isDirectRun()) {
 function isDirectRun(): boolean {
   const entry = process.argv[1];
   if (!entry) return false;
-  return /(^|[\\/])cli\.(js|cjs|mjs|ts)$/.test(entry) || /(^|[\\/])crmsolid-mcp$/.test(entry);
+  return /(^|[\\/])cli\.(js|cjs|mjs|ts)$/.test(entry) || /(^|[\\/])pinlyx-mcp$/.test(entry);
 }

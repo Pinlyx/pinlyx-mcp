@@ -9,8 +9,8 @@ You need Node.js 20 or newer and an API key starting with `csk_live_`. Create on
 Keep the key in your shell environment, then reference it:
 
 ```bash
-export CRMSOLID_API_KEY="csk_live_..."
-claude mcp add crmsolid --env CRMSOLID_API_KEY="$CRMSOLID_API_KEY" -- npx -y @crmsolid/mcp-server
+export PINLYX_API_KEY="csk_live_..."
+claude mcp add pinlyx --env PINLYX_API_KEY="$PINLYX_API_KEY" -- npx -y pinlyx-mcp
 ```
 
 Everything after `--` is the command Claude Code will spawn. The `--env` flag passes the key into that process without writing it into a config file you might later share.
@@ -24,16 +24,16 @@ A `.mcp.json` at the repo root gives everyone who clones the repo the same serve
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social,posts"],
-      "env": { "CRMSOLID_API_KEY": "${CRMSOLID_API_KEY}" }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social,posts"],
+      "env": { "PINLYX_API_KEY": "${PINLYX_API_KEY}" }
     }
   }
 }
 ```
 
-The `${CRMSOLID_API_KEY}` indirection is the whole point. **Never put a literal `csk_live_` value in a committed file.** Each person exports their own key in their shell profile, and the file itself carries no secret. If the variable is unset the server fails to start with a missing key error, which is exactly the failure you want: loud, local, and harmless.
+The `${PINLYX_API_KEY}` indirection is the whole point. **Never put a literal `csk_live_` value in a committed file.** Each person exports their own key in their shell profile, and the file itself carries no secret. If the variable is unset the server fails to start with a missing key error, which is exactly the failure you want: loud, local, and harmless.
 
 Two habits that go with this:
 
@@ -46,9 +46,9 @@ A support repo does not need finance tools. A marketing repo does not need deals
 
 | Repo type | Args |
 |---|---|
-| Support | `["-y", "@crmsolid/mcp-server", "--tools", "social,contacts,tasks"]` |
-| Marketing | `["-y", "@crmsolid/mcp-server", "--tools", "social,posts"]` |
-| Shared or CI machine | `["-y", "@crmsolid/mcp-server", "--tools", "social,posts", "--read-only"]` |
+| Support | `["-y", "pinlyx-mcp", "--tools", "social,contacts,tasks"]` |
+| Marketing | `["-y", "pinlyx-mcp", "--tools", "social,posts"]` |
+| Shared or CI machine | `["-y", "pinlyx-mcp", "--tools", "social,posts", "--read-only"]` |
 
 `--tools` and `--read-only` run inside the local proxy, so a filtered tool is not listed and not callable. `--read-only` drops every write tool before Claude Code ever sees the list.
 
@@ -65,7 +65,7 @@ Inside a session, run:
 You get the server, its status and its counts:
 
 ```text
-crmsolid   connected   tools: 142   resources: 21   prompts: 15
+pinlyx   connected   tools: 142   resources: 21   prompts: 15
 ```
 
 That is the unfiltered surface. With `--tools social,posts` in the args the count drops to those two families, and `--read-only` drops it again by removing every write tool. A lower number here is the filter working, not a broken install. From outside a session:
@@ -74,10 +74,10 @@ That is the unfiltered surface. With `--tools social,posts` in the args the coun
 claude mcp list
 ```
 
-If `crmsolid` is missing entirely, you added it at a different scope than the directory you are sitting in. If it is present but failed, run the proxy by hand to see the real error:
+If `pinlyx` is missing entirely, you added it at a different scope than the directory you are sitting in. If it is present but failed, run the proxy by hand to see the real error:
 
 ```bash
-npx -y @crmsolid/mcp-server --version
+npx -y pinlyx-mcp --version
 ```
 
 That prints a version and exits. A failure there is Node or network, not Claude Code. Everything else is in [troubleshooting](./troubleshooting.md).

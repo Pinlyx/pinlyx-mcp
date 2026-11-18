@@ -57,15 +57,15 @@ describe('redact', () => {
 
   it('walks objects and blanks credential-bearing keys whole', () => {
     const scrubbed = redactValue({
-      url: `https://api.crmsolid.com/mcp?token=${LIVE_KEY}`,
-      headers: { Authorization: `Bearer ${LIVE_KEY}`, 'user-agent': 'crmsolid-mcp/0.1.0' },
+      url: `https://api.pinlyx.com/mcp?token=${LIVE_KEY}`,
+      headers: { Authorization: `Bearer ${LIVE_KEY}`, 'user-agent': 'pinlyx-mcp/0.1.0' },
       nested: [{ apiKey: LIVE_KEY }, `plain ${LIVE_KEY}`],
     });
 
     expect(JSON.stringify(scrubbed)).not.toContain('ab12cd34ef56');
     expect(scrubbed).toEqual({
-      url: `https://api.crmsolid.com/mcp?token=${REDACTED}`,
-      headers: { Authorization: REDACTED, 'user-agent': 'crmsolid-mcp/0.1.0' },
+      url: `https://api.pinlyx.com/mcp?token=${REDACTED}`,
+      headers: { Authorization: REDACTED, 'user-agent': 'pinlyx-mcp/0.1.0' },
       nested: [{ apiKey: REDACTED }, `plain ${REDACTED}`],
     });
   });

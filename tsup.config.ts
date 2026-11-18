@@ -3,9 +3,9 @@ import { defineConfig } from 'tsup';
 // Two builds, because the two artifacts have different jobs.
 //
 //   index -> a library entry point. Dual ESM + CJS with types, same as
-//            @crmsolid/sdk, so the bridge internals can be embedded in a host
+//            the Pinlyx SDK, so the bridge internals can be embedded in a host
 //            process (a desktop app, a test harness) rather than spawned.
-//   cli   -> the `crmsolid-mcp` binary. ESM only: it is executed by node, never
+//   cli   -> the `pinlyx-mcp` binary. ESM only: it is executed by node, never
 //            imported, and the leading shebang in src/cli.ts is preserved by
 //            esbuild because that file is an entry point.
 //

@@ -88,7 +88,7 @@ jobs:
             exit 1
           fi
           # Anything with a hyphen in the version is a prerelease and must not
-          # become `latest`, or `npx @crmsolid/mcp-server` hands out a beta to
+          # become `latest`, or `npx pinlyx-mcp` hands out a beta to
           # every client that ever launches this server.
           case "${{ steps.ver.outputs.version }}" in
             *-*) tag=next ;;

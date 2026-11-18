@@ -163,10 +163,10 @@ export function assertToolAllowed(name: string, tool: ToolInfo | undefined, opti
 }
 
 /**
- * Parses a `--tools` / CRMSOLID_TOOLS value into a group list.
+ * Parses a `--tools` / PINLYX_TOOLS value into a group list.
  *
  * An empty or whitespace-only value means "no filter", not "no tools": a config
- * file that sets `CRMSOLID_TOOLS=""` should behave like one that never set it,
+ * file that sets `PINLYX_TOOLS=""` should behave like one that never set it,
  * rather than exposing an empty tool list nobody can debug.
  */
 export function parseGroups(value: string | undefined | null): string[] | null {

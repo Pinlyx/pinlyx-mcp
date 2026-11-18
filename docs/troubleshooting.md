@@ -10,18 +10,18 @@ Run these in a terminal, in order. The first one that fails is where your proble
 
 ```bash
 node --version
-npx -y @crmsolid/mcp-server --version
+npx -y pinlyx-mcp --version
 ```
 
 ```bash
-curl -sS -X POST https://api.crmsolid.com/mcp \
-  -H "Authorization: Bearer $CRMSOLID_API_KEY" \
+curl -sS -X POST https://api.pinlyx.com/mcp \
+  -H "Authorization: Bearer $PINLYX_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 ```
 
 ```bash
-CRMSOLID_API_KEY=csk_live_... npx -y @crmsolid/mcp-server
+PINLYX_API_KEY=csk_live_... npx -y pinlyx-mcp
 ```
 
 | Check | If it fails | Meaning |
@@ -42,10 +42,10 @@ The third command starts the server on stdio and then appears to hang. That is c
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -62,10 +62,10 @@ Then quit the client completely and reopen it. Closing the window is not enough 
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "C:\\Program Files\\nodejs\\npx.cmd",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -74,10 +74,10 @@ Then quit the client completely and reopen it. Closing the window is not enough 
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "C:/Program Files/nodejs/npx.cmd",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -125,17 +125,17 @@ Put the result in `command`. On Windows use `npx.cmd`, not `npx`. If you use nvm
 
 ## A tool is in the docs but not in the client's tool list
 
-**Cause.** A local filter removed it before your client ever saw the list. Either `--read-only` (or `CRMSOLID_READ_ONLY`) is on, which drops every write tool, or `--tools` (or `CRMSOLID_TOOLS`) is set to a family list that excludes it.
+**Cause.** A local filter removed it before your client ever saw the list. Either `--read-only` (or `PINLYX_READ_ONLY`) is on, which drops every write tool, or `--tools` (or `PINLYX_TOOLS`) is set to a family list that excludes it.
 
 **Fix.** Look at the `args` in your config. `--tools social,posts` means contacts, deals, tasks, email and finance tools are not listed and not callable. Widen the list or remove the flag, then restart the client. This filter runs in the local proxy, so nothing about your key or your plan is involved.
 
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social,posts,contacts,tasks"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social,posts,contacts,tasks"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -154,7 +154,7 @@ Put the result in `command`. On Windows use `npx.cmd`, not `npx`. If you use nvm
 **Fix.** Warm the cache in a terminal, then start the client. The second start is fast because the package is local.
 
 ```bash
-npx -y @crmsolid/mcp-server --version
+npx -y pinlyx-mcp --version
 ```
 
 ## An old version keeps loading after an update
@@ -165,7 +165,7 @@ npx -y @crmsolid/mcp-server --version
 
 ```bash
 npx clear-npx-cache
-npx -y @crmsolid/mcp-server@latest --version
+npx -y pinlyx-mcp@latest --version
 ```
 
 ```powershell
@@ -175,20 +175,20 @@ Remove-Item -Recurse -Force "$env:LOCALAPPDATA\npm-cache\_npx"
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server@<version>", "--tools", "social,posts"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp@<version>", "--tools", "social,posts"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
 ```
 
-Pinning is the right default on a shared or production machine. Published versions are listed on [https://www.npmjs.com/package/@crmsolid/mcp-server](https://www.npmjs.com/package/@crmsolid/mcp-server).
+Pinning is the right default on a shared or production machine. Published versions are listed on [https://www.npmjs.com/package/pinlyx-mcp](https://www.npmjs.com/package/pinlyx-mcp).
 
 ## Corporate proxy or TLS interception
 
-**Cause.** On a managed network, an inspecting proxy presents its own certificate. Node rejects it, and you get `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, `SELF_SIGNED_CERT_IN_CHAIN`, or a plain socket timeout to `api.crmsolid.com`.
+**Cause.** On a managed network, an inspecting proxy presents its own certificate. Node rejects it, and you get `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, `SELF_SIGNED_CERT_IN_CHAIN`, or a plain socket timeout to `api.pinlyx.com`.
 
 **Fix.** Give Node the corporate root certificate and give npm the proxy, at the machine level, not inside the MCP config.
 
@@ -198,20 +198,20 @@ npm config set proxy http://proxy.internal:8080
 npm config set https-proxy http://proxy.internal:8080
 ```
 
-Do not disable certificate verification to get past this. If the certificate cannot be installed, ask your network team to allow `api.crmsolid.com` and `registry.npmjs.org` through without inspection.
+Do not disable certificate verification to get past this. If the certificate cannot be installed, ask your network team to allow `api.pinlyx.com` and `registry.npmjs.org` through without inspection.
 
 ## Getting diagnostics worth reading
 
-1. `npx -y @crmsolid/mcp-server --version` proves the package installs and runs.
+1. `npx -y pinlyx-mcp --version` proves the package installs and runs.
 2. Running the binary by hand shows the stderr your client swallows. Start it with your key set and read what it prints before it waits on stdin.
 3. The client's MCP log records spawn failures, exit codes and stderr for every server. It is the only place a crash-on-startup is visible.
-4. `npx -y @crmsolid/mcp-server --help` lists the flags the installed version actually supports, which is more reliable than any document when you are chasing a version mismatch.
+4. `npx -y pinlyx-mcp --help` lists the flags the installed version actually supports, which is more reliable than any document when you are chasing a version mismatch.
 
 ## Opening an issue
 
 If none of the above fixes it, open an issue at [https://github.com/Pinlyx/pinlyx-mcp/issues](https://github.com/Pinlyx/pinlyx-mcp/issues) and include:
 
-1. Output of `node --version` and `npx -y @crmsolid/mcp-server --version`.
+1. Output of `node --version` and `npx -y pinlyx-mcp --version`.
 2. Operating system and version, and the client plus its version.
 3. Your config block with the key redacted to `csk_live_REDACTED`. Never paste a live key into a public issue. If you already have, revoke it first.
 4. The exact stderr from running the server by hand, and the relevant lines from the client's MCP log.

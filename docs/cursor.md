@@ -21,10 +21,10 @@ Same shape in both files:
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social,posts,contacts,tasks"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social,posts,contacts,tasks"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -37,7 +37,7 @@ Create the `.cursor` directory first if it does not exist. Cursor does not creat
 ## Enable the server in Cursor settings
 
 1. Open Cursor Settings and find the MCP section. Depending on your version it is labelled **MCP** or **Tools and Integrations**.
-2. Find `crmsolid` in the server list. A freshly added server usually needs an explicit toggle before it starts.
+2. Find `pinlyx` in the server list. A freshly added server usually needs an explicit toggle before it starts.
 3. Wait for the status indicator to go green or read as ready. If it stays amber, use the refresh control on the row, which restarts the process.
 4. Expand the row to see the discovered tools. That list is the proof the proxy started and authenticated.
 
@@ -56,7 +56,7 @@ Cursor can be configured to auto-run tools without asking. If you turn that on, 
 `.cursor/mcp.json` is an ordinary file in your repository. Commit it and everyone who clones the repo gets your key, including contractors, forks and anyone who later reads the git history. Two workable options:
 
 1. **Keep the key out of the repo entirely.** Put the literal key in the global `~/.cursor/mcp.json`, which lives outside every project, and commit nothing.
-2. **Commit the file with indirection.** Use `"CRMSOLID_API_KEY": "${CRMSOLID_API_KEY}"` and have each person export the variable in their shell profile. Environment variable expansion in Cursor's MCP config depends on the version you are running, so verify it resolves before you rely on it: if the server starts and tools appear, expansion worked, and if it fails with a missing key error, your version does not expand and you should fall back to option 1.
+2. **Commit the file with indirection.** Use `"PINLYX_API_KEY": "${PINLYX_API_KEY}"` and have each person export the variable in their shell profile. Environment variable expansion in Cursor's MCP config depends on the version you are running, so verify it resolves before you rely on it: if the server starts and tools appear, expansion worked, and if it fails with a missing key error, your version does not expand and you should fall back to option 1.
 
 Either way, add `.cursor/mcp.json` to `.gitignore` if there is any chance a literal key ends up in it. If a key does get committed, revoke it at [https://app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) instead of rewriting history. One key per machine means revoking one breaks one setup. More on this in [security and scopes](./security-and-scopes.md).
 

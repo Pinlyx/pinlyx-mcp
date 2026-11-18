@@ -15,15 +15,15 @@ The reliable way to open it is from inside the app: **Settings**, then **Develop
 
 ## Paste the config and restart
 
-Put this in the file. If `mcpServers` already exists, add `crmsolid` as a sibling key instead of replacing the object.
+Put this in the file. If `mcpServers` already exists, add `pinlyx` as a sibling key instead of replacing the object.
 
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -35,10 +35,10 @@ Quitting completely means Cmd+Q on macOS, not the red close button, which leaves
 
 ## Confirm the server loaded
 
-Open a new chat and look at the tools control in the composer. `crmsolid` should be listed as connected with a tool count:
+Open a new chat and look at the tools control in the composer. `pinlyx` should be listed as connected with a tool count:
 
 ```text
-crmsolid: connected
+pinlyx: connected
 tools: 142   resources: 21   prompts: 15
 ```
 
@@ -64,7 +64,7 @@ For `dm-reply-draft` you need a conversation id. Ask for the inbox first, take t
 
 ## Attach the four social resources
 
-Resources are snapshots you pin into the conversation instead of asking the model to go fetch them. They come from the same attachment menu, listed under `crmsolid`.
+Resources are snapshots you pin into the conversation instead of asking the model to go fetch them. They come from the same attachment menu, listed under `pinlyx`.
 
 | Resource | Contents |
 |---|---|
@@ -82,10 +82,10 @@ On a machine other people use, or during a demo, drop every write tool locally:
 ```json
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social,posts", "--read-only"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social,posts", "--read-only"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }

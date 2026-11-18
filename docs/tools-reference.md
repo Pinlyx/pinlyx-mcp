@@ -1,8 +1,8 @@
 # MCP Tools for Social Media: Complete Pinlyx Tool Reference
 
-The Pinlyx MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside 129 CRM tools (142 in all), so a single connection gives an assistant contacts, deals, tasks, email threads and mailboxes, finance, analytics, Google Ads, Meta Ads, TikTok Ads and the whole social surface. Run the server locally over stdio with `npx -y @crmsolid/mcp-server`, or point a remote client at the hosted endpoint `POST https://api.crmsolid.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
+The Pinlyx MCP server publishes 13 MCP tools for social media: 7 that drive the DM inbox (accounts, conversations, messages, send, mark read, inbox summary) and 6 that drive posts (list, get, schedule, update, cancel, stats). They sit alongside 129 CRM tools (142 in all), so a single connection gives an assistant contacts, deals, tasks, email threads and mailboxes, finance, analytics, Google Ads, Meta Ads, TikTok Ads and the whole social surface. Run the server locally over stdio with `npx -y pinlyx-mcp`, or point a remote client at the hosted endpoint `POST https://api.pinlyx.com/mcp`. Twelve platforms are reachable: Instagram, Facebook, X (Twitter), LinkedIn, TikTok, YouTube, Threads, Pinterest, Reddit, Bluesky, Telegram and WhatsApp.
 
-Two casing rules, stated once: MCP tool output is camelCase, and the public v1 REST API at `https://api.crmsolid.com/v1` is PascalCase. Same data, two surfaces, never mixed inside one payload. Every example on this page is MCP output, so every key here is camelCase.
+Two casing rules, stated once: MCP tool output is camelCase, and the public v1 REST API at `https://api.pinlyx.com/v1` is PascalCase. Same data, two surfaces, never mixed inside one payload. Every example on this page is MCP output, so every key here is camelCase.
 
 Every id on this surface is an integer. Conversations, messages, posts, accounts and contacts are all numeric, and they arrive as JSON numbers rather than quoted strings. The one string identifier you will see is `externalAccountId`, which is the id the upstream network uses, not a Pinlyx id.
 
@@ -440,6 +440,8 @@ Creates a post on one or more connected accounts. This is the write that people 
 | `mediaUrls` | string[] | no | Publicly reachable image or video URLs |
 | `timeZone` | string | no | IANA zone used to read a `scheduledAt` that carries no offset, for example `Europe/Istanbul` |
 | `publishNow` | boolean | no | Publish immediately instead of scheduling; defaults to false |
+| `youtube` | object | no | YouTube options for `youtube` targets, see below |
+| `instagram` | object | no | Instagram Reel options for `instagram` targets, see below |
 
 ```json
 {
@@ -485,6 +487,37 @@ Time is resolved once, for the whole batch, and the response always echoes the i
 
 **Be explicit in one of the two ways.** An offset on `scheduledAt` wins outright, and a wall clock value with no offset is read in `timeZone`, which is exactly what that field is for. Being explicit in neither is the whole "the post went out at the wrong hour" bug: a bare `09:00:00` with no zone publishes at noon in Istanbul, not at nine. `timeZone` is validated as an IANA zone id on entry, and an unrecognised one gives `timeZone must be a valid IANA zone id, e.g. 'Europe/Istanbul'`. Daylight saving moves the offset, not the zone name, which is the second reason to pass the zone rather than a hand computed offset for a date months out.
 
+### YouTube Shorts and Instagram Reels options
+
+Pass `youtube` and/or `instagram` to set the search-facing fields of a video post. Both are checked when the post is created, so a bad title or tag list fails the call instead of failing the post at publish time. Unknown option names are rejected, because the publisher would otherwise drop them without a word. An object for a network that is not in `platforms` is an error.
+
+| `youtube` field | Type | Description |
+|---|---|---|
+| `title` | string | Video title, at most 100 characters. The video description is the post `content`; the title comes only from here (without it YouTube uses the first line of the content) |
+| `tags` | string[] | Search keywords, each at most 100 characters and at most 500 in total (the commas between tags and the quotes around multi-word tags count) |
+| `categoryId` | string | YouTube category id, default `"22"` (People & Blogs); for example `"27"` Education, `"28"` Science & Tech |
+| `visibility` | string | `public` (default), `unlisted` or `private` |
+| `madeForKids` | boolean | Child-directed content flag; sent as `false` when omitted |
+| `firstComment` | string | Comment posted right after the upload |
+| `playlistId` | string | Playlist to add the video to |
+| `containsSyntheticMedia` | boolean | Disclose AI-generated content |
+
+| `instagram` field | Type | Description |
+|---|---|---|
+| `thumbOffset` | integer | Milliseconds from the start of the video to use as the Reel cover frame |
+| `coverUrl` | string | Public https image URL (JPG or PNG) used as the cover; wins over `thumbOffset` |
+| `firstComment` | string | Comment added right after publishing |
+| `shareToFeed` | boolean | Also show the Reel on the profile feed (default true) |
+| `collaborators` | string[] | Up to 3 Instagram usernames to invite |
+| `commentsEnabled` | boolean | `false` turns comments off after publishing |
+| `isAiGenerated` | boolean | Label the post as containing AI-generated media |
+
+Instagram accounts connected directly through Meta do not support these options yet; asking for them there is rejected rather than ignored.
+
+### Getting a video URL
+
+`mediaUrls` must stay reachable until the post publishes, and a video cannot be sent through an MCP tool call. Upload it with the REST endpoint `POST /v1/social/media` (multipart field `file`, up to 100 MB, MP4, MOV, WebM, JPEG, PNG, WebP or GIF, scope `posts:write`) using the same API key. It returns `{ url, contentType, size, expiresAt }`; pass `url` in `mediaUrls`. Files are kept for at least 45 days and are never removed while a pending post still uses them.
+
 Notes: annotated destructive and open world, because a scheduled post eventually leaves for a third party. `skipped` is null on a clean run and carries per account reasons when some targets failed while others succeeded, so a partial fan out is visible rather than silent. Per platform content rules are enforced at creation, and a body that breaks one is rejected with the platform named: TikTok and YouTube require a video, Instagram and Pinterest require an image or a video, an Instagram caption caps at 2200 characters, LinkedIn at 3000, and X at 280. Worked recipes live in [content scheduling recipes](./content-scheduling-recipes.md).
 
 ## crm_update_social_post
@@ -498,6 +531,8 @@ Edits a post that has not gone out. Every argument except `postId` is optional, 
 | `scheduledAt` | string | no | New ISO 8601 publish time, must be in the future |
 | `mediaUrls` | string[] | no | Replacement media list |
 | `timeZone` | string | no | IANA zone used to read a `scheduledAt` that carries no offset |
+| `youtube` | object | no | YouTube options to change (same fields as on schedule); merged over the options the post already has |
+| `instagram` | object | no | Instagram options to change; merged over the options the post already has |
 
 ```json
 {
@@ -519,7 +554,7 @@ Edits a post that has not gone out. Every argument except `postId` is optional, 
 }
 ```
 
-Notes: only a `pending` post is editable. Anything already published, in flight, failed or cancelled is refused with `Post 993 not found, or it is no longer editable (only pending posts can be edited)`, which deliberately does not distinguish a missing post from a locked one. There is no `platforms` argument here: the target account was fixed when the row was created, so retargeting means cancelling and scheduling again. Passing `mediaUrls` replaces the whole array rather than appending to it, which is the behaviour to spell out in a prompt if you want a model to add one image: it must send the full list. Passing none of `content`, `scheduledAt` or `mediaUrls` is rejected with `Nothing to update: supply content, scheduledAt or mediaUrls`. Idempotent, so replaying the same update is harmless.
+Notes: only a `pending` post is editable. Anything already published, in flight, failed or cancelled is refused with `Post 993 not found, or it is no longer editable (only pending posts can be edited)`, which deliberately does not distinguish a missing post from a locked one. There is no `platforms` argument here: the target account was fixed when the row was created, so retargeting means cancelling and scheduling again. Passing `mediaUrls` replaces the whole array rather than appending to it, which is the behaviour to spell out in a prompt if you want a model to add one image: it must send the full list. Passing none of `content`, `scheduledAt`, `mediaUrls`, `youtube` or `instagram` is rejected with `Nothing to update: supply content, scheduledAt, mediaUrls, youtube or instagram`. Options are merged field by field, so sending only a new `title` keeps the tags and category the post already had, and an object for the wrong network (`youtube` on an Instagram post) is refused. Idempotent, so replaying the same update is harmless.
 
 ## crm_cancel_social_post
 
@@ -767,7 +802,7 @@ Prompts are starting points that already know the tool names and the safety rule
 
 ## Tool families beyond social
 
-The same server and the same key expose the CRM. Use `--tools` (or `CRMSOLID_TOOLS`) with a comma-separated list to narrow what a client sees; the filter runs in the local proxy, so a filtered tool is neither listed nor callable from that client.
+The same server and the same key expose the CRM. Use `--tools` (or `PINLYX_TOOLS`) with a comma-separated list to narrow what a client sees; the filter runs in the local proxy, so a filtered tool is neither listed nor callable from that client.
 
 | Family | `--tools` value | What it covers | Example tools |
 |---|---|---|---|
@@ -791,7 +826,7 @@ The same server and the same key expose the CRM. Use `--tools` (or `CRMSOLID_TOO
 A DM responder that has no business reading invoices is one flag away:
 
 ```bash
-npx -y @crmsolid/mcp-server --tools social
+npx -y pinlyx-mcp --tools social
 ```
 
 None of the email tools sends mail. `crm_add_email_account` is the one tool on the server that takes a credential as an argument: pass the mailbox address and an app password (Gmail, Yahoo and iCloud reject the account password over IMAP), the server fills in the IMAP/SMTP hosts for Gmail, Outlook, Yahoo, Yandex, Zoho and iCloud, authenticates both connections, and saves the mailbox only when both succeed. The password is stored encrypted and no tool result ever contains it. `crm_test_email_account` re-authenticates a mailbox that is already on file and updates its status, which is the first thing to try when a mailbox stops syncing.
@@ -806,4 +841,4 @@ Add `--read-only` to drop every write tool before the client ever sees the list.
 - Fix a client that lists no tools with [troubleshooting](./troubleshooting.md).
 - Short answers to common questions are in the [FAQ](./faq.md), and the package overview is in the [README](../README.md).
 
-The REST surface these tools wrap is documented at [pinlyx.com/public-api](https://pinlyx.com/public-api), the package is on [npm](https://www.npmjs.com/package/@crmsolid/mcp-server), and the protocol itself is specified at [modelcontextprotocol.io](https://modelcontextprotocol.io).
+The REST surface these tools wrap is documented at [pinlyx.com/public-api](https://pinlyx.com/public-api), the package is on [npm](https://www.npmjs.com/package/pinlyx-mcp), and the protocol itself is specified at [modelcontextprotocol.io](https://modelcontextprotocol.io).

@@ -12,7 +12,7 @@ A server that exposes tools, resources and prompts to an AI client over a standa
 
 ### How does the Pinlyx server actually connect?
 
-The npm package runs locally over stdio and forwards JSON-RPC to `POST https://api.crmsolid.com/mcp` with your bearer key. It is a transport, not a copy of your CRM. The platform connections (Instagram, WhatsApp and the rest) live on the Pinlyx backend, which is why no platform password or cookie ever touches your machine. The same data is available to your own code through the public REST API at `https://api.crmsolid.com/v1`, which uses PascalCase JSON instead of the camelCase the MCP tools return: see [https://pinlyx.com/public-api](https://pinlyx.com/public-api).
+The npm package runs locally over stdio and forwards JSON-RPC to `POST https://api.pinlyx.com/mcp` with your bearer key. It is a transport, not a copy of your CRM. The platform connections (Instagram, WhatsApp and the rest) live on the Pinlyx backend, which is why no platform password or cookie ever touches your machine. The same data is available to your own code through the public REST API at `https://api.pinlyx.com/v1`, which uses PascalCase JSON instead of the camelCase the MCP tools return: see [https://pinlyx.com/public-api](https://pinlyx.com/public-api).
 
 ### Do I need to be a developer to use this?
 
@@ -34,11 +34,11 @@ Node 20 or newer. The package is ESM and will fail at import time on older runti
 
 ### Why npx instead of a global install?
 
-`npx -y @crmsolid/mcp-server` always resolves a published version, needs no install step, and keeps nothing stale on your machine. A global install adds an upgrade you have to remember. If your machine is offline-restricted or you want reproducible startup, install it and point `command` at the binary (`crmsolid-mcp`) instead.
+`npx -y pinlyx-mcp` always resolves a published version, needs no install step, and keeps nothing stale on your machine. A global install adds an upgrade you have to remember. If your machine is offline-restricted or you want reproducible startup, install it and point `command` at the binary (`pinlyx-mcp`) instead.
 
 ### How do I pin a version?
 
-Put the version in the package specifier: `"args": ["-y", "@crmsolid/mcp-server@<version>"]`. Pinning is the right default on a shared or production machine, because it removes surprise upgrades. Released versions are listed at [https://www.npmjs.com/package/@crmsolid/mcp-server](https://www.npmjs.com/package/@crmsolid/mcp-server).
+Put the version in the package specifier: `"args": ["-y", "pinlyx-mcp@<version>"]`. Pinning is the right default on a shared or production machine, because it removes surprise upgrades. Released versions are listed at [https://www.npmjs.com/package/pinlyx-mcp](https://www.npmjs.com/package/pinlyx-mcp).
 
 ### Where do I get an API key?
 
@@ -51,15 +51,15 @@ Yes, and it is a good pattern. Add two entries with different names: one read-on
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_write_key" }
+      "args": ["-y", "pinlyx-mcp"],
+      "env": { "PINLYX_API_KEY": "csk_live_write_key" }
     },
-    "crmsolid-readonly": {
+    "pinlyx-readonly": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--read-only"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_read_key" }
+      "args": ["-y", "pinlyx-mcp", "--read-only"],
+      "env": { "PINLYX_API_KEY": "csk_live_read_key" }
     }
   }
 }
@@ -67,7 +67,7 @@ Yes, and it is a good pattern. Add two entries with different names: one read-on
 
 ### Does it work offline?
 
-No. The local process starts fine, but every tool call goes to `api.crmsolid.com`, so with no network you get connection errors. There is no local cache and no offline queue.
+No. The local process starts fine, but every tool call goes to `api.pinlyx.com`, so with no network you get connection errors. There is no local cache and no offline queue.
 
 ## What the Pinlyx MCP server can do
 
@@ -111,7 +111,7 @@ Revoke it in the panel and it stops working immediately, everywhere it was confi
 
 ### Can I self-host it?
 
-You can run the proxy yourself: it is MIT licensed and the source is at [https://github.com/Pinlyx/pinlyx-mcp](https://github.com/Pinlyx/pinlyx-mcp), so clone it, audit it, build it and point your client at your own build. It still calls `api.crmsolid.com`, because that is where the CRM and the platform connections live. Set `CRMSOLID_BASE_URL` only if you have been given a different endpoint to use.
+You can run the proxy yourself: it is MIT licensed and the source is at [https://github.com/Pinlyx/pinlyx-mcp](https://github.com/Pinlyx/pinlyx-mcp), so clone it, audit it, build it and point your client at your own build. It still calls `api.pinlyx.com`, because that is where the CRM and the platform connections live. Set `PINLYX_BASE_URL` only if you have been given a different endpoint to use.
 
 ## Limits and costs
 
@@ -143,7 +143,7 @@ Usually because no social account is connected to that workspace, or the filters
 
 ### Where do I report a bug?
 
-At [https://github.com/Pinlyx/pinlyx-mcp/issues](https://github.com/Pinlyx/pinlyx-mcp/issues). Include your Node version, the package version from `npx -y @crmsolid/mcp-server --version`, your client and OS, and your config with the key redacted. The checklist at the end of [./troubleshooting.md](./troubleshooting.md) lists everything that saves a round trip.
+At [https://github.com/Pinlyx/pinlyx-mcp/issues](https://github.com/Pinlyx/pinlyx-mcp/issues). Include your Node version, the package version from `npx -y pinlyx-mcp --version`, your client and OS, and your config with the key redacted. The checklist at the end of [./troubleshooting.md](./troubleshooting.md) lists everything that saves a round trip.
 
 ## Where to go next
 

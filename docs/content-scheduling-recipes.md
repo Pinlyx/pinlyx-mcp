@@ -18,10 +18,10 @@ MCP tool output is camelCase (`scheduledAt`). The public v1 REST API is PascalCa
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social,posts"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social,posts"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }

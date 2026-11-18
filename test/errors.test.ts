@@ -115,7 +115,7 @@ describe('authentication errors', () => {
     expect(error).toBeInstanceOf(AuthenticationError);
     expect(error.message).toContain('rejected the API key');
     expect(error.message).toContain('revoked or expired');
-    expect(error.message).toContain('CRMSOLID_API_KEY');
+    expect(error.message).toContain('PINLYX_API_KEY');
   });
 
   it('explains a rejected key on JSON-RPC -32001', () => {
@@ -174,11 +174,11 @@ describe('network errors', () => {
   it('explains an unreachable host and names what to check', () => {
     const error = connectionErrorFor(
       new TypeError('fetch failed'),
-      'https://api.crmsolid.com/mcp',
+      'https://api.pinlyx.com/mcp',
       60_000,
     );
     expect(error).toBeInstanceOf(UpstreamConnectionError);
-    expect(error.message).toContain('Could not reach Pinlyx at https://api.crmsolid.com/mcp');
+    expect(error.message).toContain('Could not reach Pinlyx at https://api.pinlyx.com/mcp');
     expect(error.message).toContain('fetch failed');
     expect(error.message).toContain('proxy or firewall');
   });
@@ -223,7 +223,7 @@ describe('other upstream failures', () => {
   it('turns a 404 into base-url guidance', async () => {
     const error = await httpErrorFor(new Response('', { status: 404 }));
     expect(error).toBeInstanceOf(UpstreamHttpError);
-    expect(error.message).toContain('CRMSOLID_BASE_URL');
+    expect(error.message).toContain('PINLYX_BASE_URL');
     expect(error.message).toContain('no /mcp suffix');
   });
 

@@ -21,6 +21,7 @@ let captured: Captured;
 let restore: () => void;
 let originalExitCode: number | string | undefined = undefined;
 let originalKey: string | undefined;
+let originalLegacyKey: string | undefined;
 
 beforeEach(() => {
   captured = { stdout: '', stderr: '' };
@@ -42,15 +43,19 @@ beforeEach(() => {
   };
 
   originalExitCode = process.exitCode ?? undefined;
-  originalKey = process.env.CRMSOLID_API_KEY;
+  originalKey = process.env.PINLYX_API_KEY;
+  originalLegacyKey = process.env.CRMSOLID_API_KEY;
+  delete process.env.PINLYX_API_KEY;
   delete process.env.CRMSOLID_API_KEY;
 });
 
 afterEach(() => {
   restore();
   process.exitCode = originalExitCode;
-  if (originalKey === undefined) delete process.env.CRMSOLID_API_KEY;
-  else process.env.CRMSOLID_API_KEY = originalKey;
+  if (originalKey === undefined) delete process.env.PINLYX_API_KEY;
+  else process.env.PINLYX_API_KEY = originalKey;
+  if (originalLegacyKey === undefined) delete process.env.CRMSOLID_API_KEY;
+  else process.env.CRMSOLID_API_KEY = originalLegacyKey;
 });
 
 describe('--version', () => {
@@ -70,7 +75,7 @@ describe('--version', () => {
 describe('--help', () => {
   it('prints usage with no key and no network', async () => {
     await main(['--help']);
-    expect(captured.stdout).toContain('crmsolid-mcp');
+    expect(captured.stdout).toContain('pinlyx-mcp');
     expect(captured.stdout).toContain('USAGE');
     expect(captured.stdout).toContain('--read-only');
     expect(captured.stderr).toBe('');
@@ -91,7 +96,7 @@ describe('configuration failures', () => {
     expect(process.exitCode).toBe(2);
     expect(captured.stdout).toBe('');
     expect(captured.stderr).toContain('No API key');
-    expect(captured.stderr).toContain('CRMSOLID_API_KEY');
+    expect(captured.stderr).toContain('PINLYX_API_KEY');
   });
 
   it('exits 2 on an unknown flag rather than starting with it ignored', async () => {
@@ -101,7 +106,7 @@ describe('configuration failures', () => {
   });
 
   it('exits 2 on a misspelled tool group', async () => {
-    process.env.CRMSOLID_API_KEY = 'csk_test_abcdef123456ABCDEF0123456789abcdef01';
+    process.env.PINLYX_API_KEY = 'csk_test_abcdef123456ABCDEF0123456789abcdef01';
     await main(['--tools', 'socail']);
     expect(process.exitCode).toBe(2);
     expect(captured.stderr).toContain('socail');

@@ -138,7 +138,7 @@ export class Bridge {
       apiKey: this.config.apiKey,
       timeoutMs: this.config.timeoutMs,
       maxRetries: this.config.maxRetries,
-      userAgent: `crmsolid-mcp/${VERSION} (+https://docs.crmsolid.com/integrations/mcp/)`,
+      userAgent: `pinlyx-mcp/${VERSION} (+https://docs.pinlyx.com/integrations/mcp/)`,
       fetch: options.fetch,
       logger: this.logger,
       sleep: options.sleep,
@@ -319,7 +319,7 @@ export class Bridge {
 
     if (!this.handshake) {
       this.handshake = this.upstream
-        .initialize({ name: `${SERVER_NAME}-mcp-bridge`, version: VERSION })
+        .initialize({ name: `${SERVER_NAME}-bridge`, version: VERSION })
         .then((result) => {
           this.openNotificationStream();
           return result;

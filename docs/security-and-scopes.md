@@ -1,6 +1,6 @@
 # MCP Server Security and Scopes: Least Privilege for AI Access to Your CRM
 
-MCP server security at Pinlyx rests on one fact: an API key can do exactly what its scopes say, and nothing else. A key with `social:read` can read DM threads; the same key cannot send a message, touch a post, or open an invoice, no matter what the model is asked to do. Two properties support that boundary. The stdio proxy holds no platform credentials at all: it forwards JSON-RPC to `POST https://api.crmsolid.com/mcp` with your bearer key, and the Pinlyx backend keeps the Instagram, LinkedIn and WhatsApp connections, so no platform password or cookie ever reaches your laptop. And every write tool carries an MCP annotation, so a client that supports annotations can prompt you before a send or a publish rather than after.
+MCP server security at Pinlyx rests on one fact: an API key can do exactly what its scopes say, and nothing else. A key with `social:read` can read DM threads; the same key cannot send a message, touch a post, or open an invoice, no matter what the model is asked to do. Two properties support that boundary. The stdio proxy holds no platform credentials at all: it forwards JSON-RPC to `POST https://api.pinlyx.com/mcp` with your bearer key, and the Pinlyx backend keeps the Instagram, LinkedIn and WhatsApp connections, so no platform password or cookie ever reaches your laptop. And every write tool carries an MCP annotation, so a client that supports annotations can prompt you before a send or a publish rather than after.
 
 Keys look like `csk_live_...` and are created per workspace at [app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers). Scopes are granted per key, not per user, which is what makes the profiles further down this page possible. For the tool-by-tool view of what each scope reaches, see [the tools reference](./tools-reference.md).
 
@@ -43,11 +43,11 @@ For an assistant that answers questions and writes summaries. It reads the inbox
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
       // --read-only drops every write tool locally, before the client sees the list.
-      "args": ["-y", "@crmsolid/mcp-server", "--read-only"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--read-only"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -62,11 +62,11 @@ For an assistant that works the social inbox: triage, draft, send, mark read. It
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
       // --tools social hides the posts family and the whole CRM surface.
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "social"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -79,10 +79,10 @@ For an assistant that plans and schedules posts. It never sees the inbox, so a D
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "posts"],
-      "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+      "args": ["-y", "pinlyx-mcp", "--tools", "posts"],
+      "env": { "PINLYX_API_KEY": "csk_live_..." }
     }
   }
 }
@@ -92,7 +92,7 @@ Remember the scheduling rule that pairs with this profile: `scheduledAt` is requ
 
 ## `--read-only` and `--tools` are defence in depth, not the boundary
 
-Both flags are useful and both have the same honest limitation. `--read-only` (or `CRMSOLID_READ_ONLY`) removes every write tool from the list the client receives. `--tools social,posts` (or `CRMSOLID_TOOLS`) narrows the surface to named families. Because the filter runs inside the local proxy, a filtered tool is not listed and not callable from that client: the model cannot call what it cannot see, and it cannot talk its way past a filter it does not know about.
+Both flags are useful and both have the same honest limitation. `--read-only` (or `PINLYX_READ_ONLY`) removes every write tool from the list the client receives. `--tools social,posts` (or `PINLYX_TOOLS`) narrows the surface to named families. Because the filter runs inside the local proxy, a filtered tool is not listed and not callable from that client: the model cannot call what it cannot see, and it cannot talk its way past a filter it does not know about.
 
 But those filters live on your machine, in a process you control, applied to a key that carries whatever scopes it carries. Copy that key into a different client with no flags and the full scope set is available again. Steal that key and the flags are irrelevant.
 
@@ -107,16 +107,16 @@ State it plainly: `--read-only` and `--tools` protect you against a confused mod
 - **Revocation is immediate.** Deleting a key at [app.pinlyx.com/settings/developers](https://app.pinlyx.com/settings/developers) stops the next request. The proxy caches nothing that survives it; a running client fails on its next call with an authentication error.
 - **If a key leaks, delete it first and investigate second.** Then check that key's last-used timestamp, look at what its scopes allowed, and read the outbound history for the surfaces it could reach: sent DMs appear in their threads as `outbound` messages, and created or scheduled posts appear in the post list. A leaked `social:read` key is a disclosure problem. A leaked `social:write` key is a disclosure problem plus everything it may have sent.
 
-A project-level `.mcp.json` (Claude Code) or `.cursor/mcp.json` (Cursor) is checked into the repository by design: that is the point of a project file, so the whole team gets the same server without each person configuring it. Which is exactly why the key must never be written into it literally. Reference an environment variable using your client's expansion syntax (Claude Code expands `${CRMSOLID_API_KEY}` in `.mcp.json`), and keep the actual value in your shell profile or your OS keychain:
+A project-level `.mcp.json` (Claude Code) or `.cursor/mcp.json` (Cursor) is checked into the repository by design: that is the point of a project file, so the whole team gets the same server without each person configuring it. Which is exactly why the key must never be written into it literally. Reference an environment variable using your client's expansion syntax (Claude Code expands `${PINLYX_API_KEY}` in `.mcp.json`), and keep the actual value in your shell profile or your OS keychain:
 
 ```jsonc
 {
   "mcpServers": {
-    "crmsolid": {
+    "pinlyx": {
       "command": "npx",
-      "args": ["-y", "@crmsolid/mcp-server", "--tools", "social"],
+      "args": ["-y", "pinlyx-mcp", "--tools", "social"],
       // The value is resolved from your environment at launch, never stored here.
-      "env": { "CRMSOLID_API_KEY": "${CRMSOLID_API_KEY}" }
+      "env": { "PINLYX_API_KEY": "${PINLYX_API_KEY}" }
     }
   }
 }
@@ -153,8 +153,8 @@ Two habits on top of the mechanics. Put a line in your system prompt saying that
 
 Plain description of the data flow, because "it runs locally" is often misread as "the data stays local".
 
-- Your MCP client starts `crmsolid-mcp` as a local process and speaks MCP over stdio to it.
-- The proxy forwards each JSON-RPC call over HTTPS to `POST https://api.crmsolid.com/mcp`, authenticated with your bearer key. Tool arguments go up, tool results come back.
+- Your MCP client starts `pinlyx-mcp` as a local process and speaks MCP over stdio to it.
+- The proxy forwards each JSON-RPC call over HTTPS to `POST https://api.pinlyx.com/mcp`, authenticated with your bearer key. Tool arguments go up, tool results come back.
 - The Pinlyx backend holds the platform connections. Instagram, LinkedIn, WhatsApp and the rest are contacted from Pinlyx infrastructure with tokens stored there, encrypted at rest. Those tokens are never sent to the proxy and never touch your machine.
 - Whatever the model reads then goes wherever your MCP client sends its context, which for a hosted assistant means the model provider. That is a property of your client, not of this server. If that matters for your data policy, decide it at the client level and use a narrow key here.
 

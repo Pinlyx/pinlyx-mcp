@@ -10,7 +10,7 @@ import { redact, redactValue } from './redact.js';
  *
  * `warn` and `error` are always on, because a silent bridge that cannot reach
  * the API is indistinguishable from one with nothing to do. `debug` is behind
- * CRMSOLID_DEBUG / --debug.
+ * PINLYX_DEBUG / --debug.
  */
 export interface Logger {
   debug(message: string, detail?: unknown): void;
@@ -24,7 +24,7 @@ export function createLogger(debugEnabled: boolean, write: (line: string) => voi
   const emit = (level: string, message: string, detail?: unknown): void => {
     const stamp = new Date().toISOString();
     const suffix = detail === undefined ? '' : ` ${safeJson(detail)}`;
-    write(`[crmsolid-mcp] ${stamp} ${level} ${redact(message)}${suffix}`);
+    write(`[pinlyx-mcp] ${stamp} ${level} ${redact(message)}${suffix}`);
   };
 
   return {

@@ -74,7 +74,7 @@ function writeTool(name) {
   };
 }
 
-/** Stands in for `POST https://api.crmsolid.com/mcp` plus its SSE channel. */
+/** Stands in for `POST https://api.pinlyx.com/mcp` plus its SSE channel. */
 function startStubUpstream() {
   const received = [];
   const openStreams = new Set();
@@ -120,7 +120,7 @@ function startStubUpstream() {
             prompts: { listChanged: true },
             logging: {},
           },
-          serverInfo: { name: 'crmsolid', title: 'Pinlyx', version: '1.0.0' },
+          serverInfo: { name: 'pinlyx', title: 'Pinlyx', version: '1.0.0' },
         }, { 'Mcp-Session-Id': SESSION_ID });
       }
 
@@ -187,7 +187,7 @@ function respond(response, id, result, extraHeaders = {}) {
 /** Spawns the built CLI and exposes a request/response helper over its pipes. */
 function startBridge(baseUrl, args) {
   const child = spawn(process.execPath, [CLI, ...args], {
-    env: { ...process.env, CRMSOLID_API_KEY: API_KEY, CRMSOLID_BASE_URL: baseUrl },
+    env: { ...process.env, PINLYX_API_KEY: API_KEY, PINLYX_BASE_URL: baseUrl },
     stdio: ['pipe', 'pipe', 'pipe'],
   });
 
@@ -279,7 +279,7 @@ async function main() {
 
     check('initialize returns a result', Boolean(initialize.result), JSON.stringify(initialize));
     check('protocol revision is 2025-06-18', initialize.result?.protocolVersion === '2025-06-18');
-    check('server identifies as crmsolid', initialize.result?.serverInfo?.name === 'crmsolid');
+    check('server identifies as pinlyx-mcp', initialize.result?.serverInfo?.name === 'pinlyx-mcp');
     check('server reports a version', typeof initialize.result?.serverInfo?.version === 'string');
     check('tools capability is advertised', Boolean(initialize.result?.capabilities?.tools));
     check('resources capability is advertised', Boolean(initialize.result?.capabilities?.resources));
@@ -342,7 +342,7 @@ async function main() {
 
     console.log('\nsecrets');
     check('the key never appears on stderr', !bridge.stderr.includes(API_KEY));
-    check('debug output was produced', bridge.stderr.includes('[crmsolid-mcp]'), bridge.stderr.slice(0, 200));
+    check('debug output was produced', bridge.stderr.includes('[pinlyx-mcp]'), bridge.stderr.slice(0, 200));
   } finally {
     await bridge.stop();
     await upstream.close();

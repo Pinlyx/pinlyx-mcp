@@ -11,7 +11,7 @@ import { VERSION } from './version.js';
  */
 export interface BridgeConfig {
   apiKey: string;
-  /** API host with no trailing slash, e.g. `https://api.crmsolid.com`. */
+  /** API host with no trailing slash, e.g. `https://api.pinlyx.com`. */
   baseUrl: string;
   /** Full MCP endpoint, `baseUrl` + `/mcp`. */
   endpoint: string;
@@ -27,7 +27,7 @@ export interface BridgeConfig {
   debug: boolean;
 }
 
-export const DEFAULT_BASE_URL = 'https://api.crmsolid.com';
+export const DEFAULT_BASE_URL = 'https://api.pinlyx.com';
 export const DEFAULT_TIMEOUT_MS = 60_000;
 export const DEFAULT_MAX_RETRIES = 3;
 
@@ -63,7 +63,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
       continue;
     }
     if (!arg.startsWith('--')) {
-      throw new ConfigError(`Unexpected argument '${arg}'. Run crmsolid-mcp --help for the accepted flags.`);
+      throw new ConfigError(`Unexpected argument '${arg}'. Run pinlyx-mcp --help for the accepted flags.`);
     }
 
     const body = arg.slice(2);
@@ -78,7 +78,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     }
 
     if (!VALUE_FLAGS.has(name)) {
-      throw new ConfigError(`Unknown flag '--${name}'. Run crmsolid-mcp --help for the accepted flags.`);
+      throw new ConfigError(`Unknown flag '--${name}'. Run pinlyx-mcp --help for the accepted flags.`);
     }
 
     const value = inline ?? argv[++i];
@@ -91,12 +91,28 @@ export function parseArgs(argv: string[]): ParsedArgs {
   return { values, flags };
 }
 
+/**
+ * Reads a setting from the environment. `PINLYX_<NAME>` is the name this package
+ * documents; `CRMSOLID_<NAME>` is the pre-1.0 spelling and is still honoured so an
+ * existing client configuration keeps working after the rename. The first
+ * non-empty value wins, and `PINLYX_` is always looked at first.
+ */
+const LEGACY_ENV_PREFIX = 'CRMSOLID_';
+
+export function envVar(env: NodeJS.ProcessEnv, name: string): string | undefined {
+  for (const key of [`PINLYX_${name}`, `${LEGACY_ENV_PREFIX}${name}`]) {
+    const value = env[key];
+    if (value !== undefined && value.trim() !== '') return value;
+  }
+  return undefined;
+}
+
 /** Builds the runtime configuration, or throws a ConfigError naming the fix. */
 export function resolveConfig(parsed: ParsedArgs, env: NodeJS.ProcessEnv): BridgeConfig {
-  const apiKey = (parsed.values['api-key'] ?? env.CRMSOLID_API_KEY ?? '').trim();
+  const apiKey = (parsed.values['api-key'] ?? envVar(env, 'API_KEY') ?? '').trim();
   if (!apiKey) {
     throw new ConfigError(
-      'No API key. Set CRMSOLID_API_KEY in the "env" block of your MCP client configuration, or pass --api-key. ' +
+      'No API key. Set PINLYX_API_KEY in the "env" block of your MCP client configuration, or pass --api-key. ' +
         `Create a key at ${KEY_SETTINGS_URL}.`,
     );
   }
@@ -106,13 +122,13 @@ export function resolveConfig(parsed: ParsedArgs, env: NodeJS.ProcessEnv): Bridg
     );
   }
 
-  const baseUrl = normalizeBaseUrl(parsed.values['base-url'] ?? env.CRMSOLID_BASE_URL ?? DEFAULT_BASE_URL);
-  const toolGroups = parseGroups(parsed.values['tools'] ?? env.CRMSOLID_TOOLS);
+  const baseUrl = normalizeBaseUrl(parsed.values['base-url'] ?? envVar(env, 'BASE_URL') ?? DEFAULT_BASE_URL);
+  const toolGroups = parseGroups(parsed.values['tools'] ?? envVar(env, 'TOOLS'));
   const unknown = unknownGroups(toolGroups);
   if (unknown.length > 0) {
     throw new ConfigError(
       `--tools names ${unknown.length === 1 ? 'a group' : 'groups'} this server does not recognise: ` +
-        `${unknown.join(', ')}. Run crmsolid-mcp --help for the group list.`,
+        `${unknown.join(', ')}. Run pinlyx-mcp --help for the group list.`,
     );
   }
 
@@ -121,15 +137,15 @@ export function resolveConfig(parsed: ParsedArgs, env: NodeJS.ProcessEnv): Bridg
     baseUrl,
     endpoint: `${baseUrl}/mcp`,
     toolGroups,
-    readOnly: parsed.flags.has('read-only') || isTruthy(env.CRMSOLID_READ_ONLY),
-    timeoutMs: readPositiveInt(parsed.values['timeout'] ?? env.CRMSOLID_TIMEOUT_MS, DEFAULT_TIMEOUT_MS, '--timeout'),
+    readOnly: parsed.flags.has('read-only') || isTruthy(envVar(env, 'READ_ONLY')),
+    timeoutMs: readPositiveInt(parsed.values['timeout'] ?? envVar(env, 'TIMEOUT_MS'), DEFAULT_TIMEOUT_MS, '--timeout'),
     maxRetries: readNonNegativeInt(
-      parsed.values['max-retries'] ?? env.CRMSOLID_MAX_RETRIES,
+      parsed.values['max-retries'] ?? envVar(env, 'MAX_RETRIES'),
       DEFAULT_MAX_RETRIES,
       '--max-retries',
     ),
-    sse: !parsed.flags.has('no-sse') && !isFalsy(env.CRMSOLID_SSE),
-    debug: parsed.flags.has('debug') || isTruthy(env.CRMSOLID_DEBUG),
+    sse: !parsed.flags.has('no-sse') && !isFalsy(envVar(env, 'SSE')),
+    debug: parsed.flags.has('debug') || isTruthy(envVar(env, 'DEBUG')),
   };
 }
 
@@ -185,7 +201,7 @@ function readNonNegativeInt(value: string | undefined, fallback: number, flag: s
 
 /** The `--help` text. Printed to stdout and exits 0, with or without a key. */
 export function helpText(): string {
-  return `crmsolid-mcp ${VERSION}
+  return `pinlyx-mcp ${VERSION}
 
   Manage every social media DM and post from your AI assistant, over MCP.
 
@@ -195,27 +211,27 @@ export function helpText(): string {
   Reddit, Bluesky, Telegram and WhatsApp inboxes, plus scheduled posts.
 
 USAGE
-  crmsolid-mcp [options]
+  pinlyx-mcp [options]
 
 OPTIONS
   --api-key <key>        Pinlyx API key (csk_live_...). Required.
-                         Env: CRMSOLID_API_KEY
+                         Env: PINLYX_API_KEY
   --base-url <url>       API host. Default: ${DEFAULT_BASE_URL}
-                         Env: CRMSOLID_BASE_URL
+                         Env: PINLYX_BASE_URL
   --tools <a,b,c>        Expose only these tool groups. Default: all.
-                         Env: CRMSOLID_TOOLS
+                         Env: PINLYX_TOOLS
   --read-only            Expose only tools Pinlyx marks as read-only, and
                          refuse a write even if one is called anyway.
-                         Env: CRMSOLID_READ_ONLY=1
+                         Env: PINLYX_READ_ONLY=1
   --timeout <ms>         Per-request timeout. Default: ${DEFAULT_TIMEOUT_MS}
-                         Env: CRMSOLID_TIMEOUT_MS
+                         Env: PINLYX_TIMEOUT_MS
   --max-retries <n>      Retries for idempotent calls. Default: ${DEFAULT_MAX_RETRIES}
-                         Env: CRMSOLID_MAX_RETRIES
+                         Env: PINLYX_MAX_RETRIES
   --no-sse               Do not open the upstream notification stream.
-                         Env: CRMSOLID_SSE=0
+                         Env: PINLYX_SSE=0
   --debug                Verbose diagnostics on stderr. The API key is never
                          written to any output.
-                         Env: CRMSOLID_DEBUG=1
+                         Env: PINLYX_DEBUG=1
   -h, --help             Print this help and exit.
   -v, --version          Print the version and exit.
 
@@ -229,10 +245,10 @@ CONFIGURATION
 
   {
     "mcpServers": {
-      "crmsolid": {
+      "pinlyx": {
         "command": "npx",
-        "args": ["-y", "@crmsolid/mcp-server"],
-        "env": { "CRMSOLID_API_KEY": "csk_live_..." }
+        "args": ["-y", "pinlyx-mcp"],
+        "env": { "PINLYX_API_KEY": "csk_live_..." }
       }
     }
   }

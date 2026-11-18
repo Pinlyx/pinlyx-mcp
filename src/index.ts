@@ -1,7 +1,7 @@
 /**
- * `@crmsolid/mcp-server` as a library.
+ * `pinlyx-mcp` as a library.
  *
- * The published artifact people actually run is the `crmsolid-mcp` binary. This
+ * The published artifact people actually run is the `pinlyx-mcp` binary. This
  * entry point exists for the two cases where spawning a process is the wrong
  * shape: a desktop app that hosts the bridge in-process over its own transport,
  * and a test harness that wants the pieces without stdio.
