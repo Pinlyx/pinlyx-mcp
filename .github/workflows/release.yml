@@ -98,7 +98,7 @@ jobs:
 
       - name: Pack a tarball artifact
         if: always()
-        run: npm pack --pack-destination ./artifacts
+        run: mkdir -p artifacts && npm pack --pack-destination ./artifacts
 
       - uses: actions/upload-artifact@v4
         if: always()
